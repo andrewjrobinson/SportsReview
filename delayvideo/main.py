@@ -50,7 +50,7 @@ class DelayVideoApplication(QtCore.QObject):
     def __init__(self, argv = [], parent=None):
         QtCore.QObject.__init__(self, parent)
         
-        #TODO: write startup file
+        #TODO: write startup file and log
         
         # load settings file
         if len(argv) == 2:
@@ -59,7 +59,7 @@ class DelayVideoApplication(QtCore.QObject):
             self.settings = settings.settingsmanager.SettingsManager()
         
         # setup main window
-        self.mainwindow = ui.mainwindow.MainWindow(self)
+        self.mainwindow = ui.mainwindow.MainWindow(self.settings, self)
         self.mainwindow.show()
         
         # connect signals
@@ -72,7 +72,7 @@ class DelayVideoApplication(QtCore.QObject):
         
         # get capturer and frame buffer
         self.video = delayvideo.video.video.Video(cv2.VideoCapture(0))
-        self.framebuffer = delayvideo.video.framebuffer.FrameBuffer()    # place to store frames while running
+        self.framebuffer = delayvideo.video.framebuffer.FrameBuffer(self.settings)    # place to store frames while running
         self.pausedbuffer = None            # place to store frames while paused
         
         # frame capture timer
@@ -120,15 +120,31 @@ class DelayVideoApplication(QtCore.QObject):
         except TypeError:
             self.mainwindow.updateViewText("Buffering ...")
     
+    
     @pyqtSlot()
     def incDelay(self):
-        self.framebuffer.incDelay()
-        self.mainwindow.setDelay("%.1f"%self.framebuffer._delay)
+        '''
+        Increases delay by 0.5 seconds
+        @return: float, the new delay
+        '''
+        delay = float(self.settings.getSetting("delay")) + 0.5
+        if delay < 0:
+            delay = 0
+        self.settings.setSetting("delay", delay)
+        return delay
     
     @pyqtSlot()
     def decDelay(self):
-        self.framebuffer.decDelay()
-        self.mainwindow.setDelay("%.1f"%self.framebuffer._delay)
+        '''
+        Decreases delay by 0.5 seconds
+        
+        @return: float, the new delay
+        '''
+        delay = float(self.settings.getSetting("delay")) - 0.5
+        if delay < 0:
+            delay = 0
+        self.settings.setSetting("delay", delay)
+        return delay
     
     @pyqtSlot()
     def incFrame(self):

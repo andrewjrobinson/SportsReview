@@ -27,13 +27,17 @@ Created on 26/03/2014
 
 import os
 
+from PyQt4.QtCore import pyqtSignal, QObject
+
 import support
 
-class SettingsManager(object):
+class SettingsManager(QObject):
     '''Loads, updates and writes settings from/to disk'''
 
     def __init__(self, settingsfilename=None):
         '''Loads a specific settings file (or default one)'''
+        
+        QObject.__init__(self)
         
         if settingsfilename is not None and os.path.exists(settingsfilename):
             self._settingsfilename = settingsfilename
@@ -46,6 +50,10 @@ class SettingsManager(object):
         self._docstring = settingsmodule.__doc__
         self._dirty = False
         
+    # end __init__()
+
+    settingChanged = pyqtSignal() # name, value
+        
     def writeSettings(self, force=False):
         '''Write the settings back to the file (if needed)'''
         if self._dirty or force:
@@ -53,6 +61,7 @@ class SettingsManager(object):
             if f:
                 f.write("'''%s'''\n" % self._docstring)
                 f.write("settings = %s\n" % self._settings)
+                self._dirty = False
                 f.close()
                 return True
             return False
@@ -68,6 +77,7 @@ class SettingsManager(object):
         if name in self._settings:
             self._settings[name] = value
             self._dirty = True
+            self.settingChanged.emit(name, value)
             return True
         return False
     

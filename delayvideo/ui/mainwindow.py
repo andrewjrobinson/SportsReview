@@ -32,12 +32,25 @@ import time
 
 
 class MainWindow(QtGui.QMainWindow):
-    def __init__(self,application=None):
+    
+    def __init__(self, settings, application=None):
+        '''
+        UI Object that draws the main window.
+        
+        Listens to the following settings:
+        - delay: 
+        '''
         QtGui.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.update()
         self.application = application
+        
+        self.settings = settings
+        self.settings.settingChanged.connect(self.settingChanged)
+        self.ui.delay.setText(str(settings.getSetting("delay")))
+        
+    # end __init__()
     
     # signals
     incDelay = pyqtSignal()         #+>=. (while running)
@@ -50,16 +63,10 @@ class MainWindow(QtGui.QMainWindow):
     recordBuffer = pyqtSignal()     #F12
     
     
-    def interuptClose(self):
-        '''Call this in closing signal to abort close'''
-        self.abortClose = True
-    
-    def _doClose(self):
-        '''signal and then close (if required)'''
-        self.abortClose = False
-        self.closing.emit()
-        if not self.abortClose:
-            self.cl
+    @pyqtSlot()
+    def settingChanged(self, name, value):
+        if name == "delay":
+            self.ui.delay.setText(value)
         
     
     def keyPressEvent(self, e):
@@ -116,57 +123,3 @@ class MainWindow(QtGui.QMainWindow):
         
     def setFrameRate(self, framerate):
         self.ui.frameRate.setText(framerate)
-        
-    def setDelay(self, delay):
-        self.ui.delay.setText(delay)
-        
-#     @pyqtSlot()
-#     def incDelay(self):
-#         self.framebuffer.incDelay()
-#         self.ui.delay.setText("%.1f"%self.framebuffer._delay)
-#     
-#     @pyqtSlot()
-#     def decDelay(self):
-#         self.framebuffer.decDelay()
-#         self.ui.delay.setText("%.1f"%self.framebuffer._delay)
-#     
-#     @pyqtSlot()
-#     def pauseClicked(self):
-#         self.paused = True
-#         self.pausedbuffer = self.framebuffer.cloneFrames()
-#         self.ui.videoFrame.setPixmap(self.pausedbuffer.current())
-#         self.ui.videoFrame.setScaledContents(True)
-#         self.updateFrameId()
-#     
-#     @pyqtSlot()
-#     def playClicked(self):
-#         self.paused = False
-#         self.pausedbuffer = None  #NOTE: maybe we shouldn't clear it hear so they can record if after resuming.
-#         self.ui.frameNum.setText("~")
-#     
-#     @pyqtSlot()
-#     def nextClicked(self):
-#         if self.paused and self.pausedbuffer:
-#             frame = self.pausedbuffer.next()
-#             if frame:
-#                 self.ui.videoFrame.setPixmap(frame)
-#                 self.ui.videoFrame.setScaledContents(True)
-#                 self.updateFrameId()
-#     
-#     @pyqtSlot()
-#     def backClicked(self):
-#         if self.paused and self.pausedbuffer:
-#             frame = self.pausedbuffer.prev()
-#             if frame:
-#                 self.ui.videoFrame.setPixmap(frame)
-#                 self.ui.videoFrame.setScaledContents(True)
-#                 self.updateFrameId()
-#     
-#     @pyqtSlot()
-#     def recordClicked(self):
-#         if self.pausedbuffer:
-#             self.pausedbuffer.writeToDir("/tmp/video_%s" % time.strftime("%Y-%m-%d_%H-%M-%S"))
-# 
-#     def updateFrameId(self):
-#         if self.pausedbuffer:
-#             self.ui.frameNum.setText("%s/%s" % (self.pausedbuffer._frameidx + 1, len(self.pausedbuffer._frames)))

@@ -23,33 +23,44 @@ Created on 22/03/2014
 @author: arobinson
 '''
 import time
-from PyQt4.QtCore import QFile
-from PyQt4.QtGui import QPixmap
 import os
 
-class FrameBuffer(object):
-    '''A buffer object to store frames (for a given timeperiod'''
+from PyQt4.QtCore import QFile, pyqtSlot, QObject
+from PyQt4.QtGui import QPixmap
+
+class FrameBuffer(QObject):
+    '''A buffer object to store frames (for a given timeperiod)'''
+            
+    def __init__(self, settings):
+        '''
+        A buffer object to store frames (for a given timeperiod)
+        
+        Listens to settings object for changes to:
+        - delay: The amount of time (seconds) to delay frames from push() to get()
+        - keepalive: The amount of time (seconds) to keep frames after they are provided to get().  i.e. how much history for the pause function.
+        - extend: The amount of time (seconds) to keep recording frames for after pausing.
+        
+        @param settings: A settings manager instance which contains settings to use.
+        '''
+        
+        QObject.__init__(self)
+        
+        self.settings = settings
+        self.settings.settingChanged.connect(self.settingChanged)
+        self._delay = settings.getSetting("delay")
+        self._keepalive = settings.getSetting("keepalive")
+        self._extend = settings.getSetting("extend")
+        
+        self._frames = []       # the frames in the buffer
+        self._oldframes = []    # the recent old frames (for pause)
+        self.lastframe = None
+        self._clones = []       # list of clones that we are appending to still (i.e. paused buffers)
     
     class Frame(object):
         '''A single frame'''
         def __init__(self, timestamp, data):
             self.timestamp = timestamp
             self.data = data
-            
-    def __init__(self, delay=2.0, ttl=2.0, histextend=1.0):
-        '''
-        @param delay: The amount of time (seconds) to delay frames from push() to get()
-        @param ttl: The amount of time (seconds) to keep frames after they are provided to get().  i.e. how much history for the pause function.
-        @param histextend: The amount of time (seconds) to keep recording frames for after pausing.
-        '''
-        self._delay = delay
-        self._ttl = ttl
-        self._histextend = histextend
-        
-        self._frames = []       # the frames in the buffer
-        self._oldframes = []    # the recent old frames (for pause)
-        self.lastframe = None
-        self._clones = []       # list of clones that we are appending to still (i.e. paused buffers)
         
     def push(self, framedata):
         '''Add a frame to the buffer'''
@@ -79,12 +90,12 @@ class FrameBuffer(object):
             getdata = self.lastframe.data
             
             # keep old frames (for pause)
-            if self._ttl > 0:
+            if self._keepalive > 0:
                 if newframe: # only add it onces
                     self._oldframes.append(self.lastframe)
                 
                 # remove any expired oldframes
-                releasetime -= self._ttl # repurpose var
+                releasetime -= self._keepalive # repurpose var
                 while len(self._oldframes) > 0:
                     frame = self._oldframes[0]
                     if frame.timestamp > releasetime:
@@ -99,22 +110,21 @@ class FrameBuffer(object):
             return len(self._frames) / self._delay
         return 0
     
-    def incDelay(self, amount = 0.5):
-        self._delay += amount
-        if self._delay > 20:
-            self._delay = 20
-    
-    def decDelay(self, amount = 0.5):
-        self._delay -= amount
-        if self._delay < 0:
-            self._delay = 0
+    @pyqtSlot()
+    def settingChanged(self, name, value):
+        if name == "delay":
+            self._delay = float(value)
+        elif name == "keepalive":
+            self._keepalive = float(value)
+        elif name == "extend":
+            self._extend = float(value)
             
     def cloneFrames(self):
         '''Clones the frames in this buffer.  Note: buffer object will be 
         returned immediately but added to later if length of buffer is 
         insufficient'''
         
-        clone = FrameList(self._frames, self._oldframes, time.time() + self._histextend)
+        clone = FrameList(self._frames, self._oldframes, time.time() + self._extend)
         self._clones.append(clone)
         return clone
         
@@ -139,7 +149,7 @@ class FrameList(object):
             self._frameidx = len(self._frames) -1
 
         self._addframecount = 0
-        print "frames: %s" % len(self._frames)
+#         print "frames: %s" % len(self._frames)
         
     def addFrame(self, frame, ftime):
         '''Adds another frame to this buffer (after creation time)
@@ -148,7 +158,7 @@ class FrameList(object):
         @return: boolean, False once a frame arrives after endtime
         '''
         if ftime > self._endtime:
-            print "Added: %s frames" % self._addframecount
+#             print "Added: %s frames" % self._addframecount
             return False
         self._addframecount += 1
         self._frames.append(frame)
