@@ -1,5 +1,5 @@
 ''' 
-NOTE1: Close DelayVideo before editing as your changes may be lost.
+NOTE1: Close all SportsReview applications before editing as your changes may be lost.
 NOTE2: File is regenerated upon changing a setting within GUI.  Only this DocString will be kept.
 
 Timing:
@@ -20,8 +20,4 @@ Settings:
 - extend:    float, seconds to keep recording frames for when pausing
 
 '''
-settings = {
-            'delay': 2.0,
-            'keepalive': 2.0,
-            'extend': 1.0,
-            }
+settings = {'delay': 2.0, 'extend': 1.0, 'keepalive': 2.0}

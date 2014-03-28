@@ -80,12 +80,20 @@ class DelayVideoApplication(QtCore.QObject):
         self._timer.timeout.connect(self.frame)
         self._timer.start(27)
         
+        # save settings timer
+        self._savetimer = QtCore.QTimer(self)
+        self._savetimer.timeout.connect(self.settings.writeSettings)
+        self._savetimer.start(5000) # 5sec (only if needed)
+        
         # statevars
         self.framei = 0
         self.paused = False
     
     def cleanup(self):
         ''''''
+        # save the settings (only if changed)
+        if self.settings:
+            self.settings.writeSettings()
         #TODO: remove startup file (to check for crashes)
     
     def frame(self):
