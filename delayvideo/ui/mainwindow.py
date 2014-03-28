@@ -47,7 +47,6 @@ class MainWindow(QtGui.QMainWindow):
     help = pyqtSignal()             #F1
     edit = pyqtSignal()             #F2
     togglePlay = pyqtSignal()       #F7 <space>
-    toggleFullScreen = pyqtSignal() #F11
     recordBuffer = pyqtSignal()     #F12
     
     
@@ -94,7 +93,10 @@ class MainWindow(QtGui.QMainWindow):
             self.togglePlay.emit()
                 
         elif e.key() == QtCore.Qt.Key_F11:
-            self.toggleFullScreen.emit()
+            if not self.isFullScreen():
+                self.showFullScreen()
+            else:
+                self.showNormal()
                 
         elif e.key() == QtCore.Qt.Key_F12:
             self.recordBuffer.emit()

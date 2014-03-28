@@ -15,18 +15,77 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
      <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
       <widget class="QLabel" name="videoFrame">
        <property name="text">
         <string/>
        </property>
       </widget>
       <widget class="QWidget" name="buttonArea" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>108</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(106, 106, 106);</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,0,0">
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,0,0,0,0,0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Frame rate:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="4" colspan="3">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;'+.=&amp;gt;' = increase delay, next frame&lt;br/&gt;'-,&amp;lt;' = decrease delay, previous frame&lt;br/&gt;Esc = quit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel" name="frameRate">
+          <property name="text">
+           <string>30</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QLabel" name="frameNum">
+          <property name="text">
+           <string>~</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="4">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;F7 &amp;lt;space&amp;gt; = toggle play/pause mode&lt;br/&gt;F11 = toggle fullscreen mode&lt;br/&gt;F12 = write buffer to /tmp/video_* (only when paused)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="2">
          <widget class="QLabel" name="delay">
           <property name="text">
@@ -41,51 +100,10 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="frameRate">
-          <property name="text">
-           <string>30</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Frame rate:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="frameNum">
-          <property name="text">
-           <string>~</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="2">
+        <item row="0" column="5">
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>Frame:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="3">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;F7 &amp;lt;space&amp;gt; 	= toggle play/pause mode&lt;br/&gt;F12 	= write buffer to /tmp/video_* (only when paused)&lt;br/&gt;'+.=&amp;gt;' 	= increase delay, next frame&lt;br/&gt;'-,&amp;lt;' 	= decrease delay, previous frame&lt;br/&gt;Esc	= quit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
