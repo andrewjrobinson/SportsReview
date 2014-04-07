@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Developer notes
+rooturl: ../
 ---
 
 [Home](../index.html) > Design notes
