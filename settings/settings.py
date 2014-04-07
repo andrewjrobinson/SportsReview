@@ -18,6 +18,16 @@ Settings:
 - delay:     float, seconds between capturing a frame to displaying it when in playback mode.
 - keepalive: float, seconds to keep frames for after they are displayed (i.e. used for backup in paused mode)
 - extend:    float, seconds to keep recording frames for when pausing
+- keybinding: dict, the key bindings for various functions.  Acceptable values from 'QtCore.Qt' package where name starts with 'Key_'.
+    - quit
+    - play
+    - incdelay
+    - decdelay
+    - fullscreen
+    - edit
+    - record
+    - help
+- recorddirectory: str, the output directory for recorded captures.
 
 '''
-settings = {'delay': 2.0, 'extend': 1.0, 'keepalive': 2.0}
+settings = {'delay': 2.0, 'keybinding': {'quit': ['Escape', 'Q'], 'play': ['F7', 'Space'], 'decdelay': ['Less', 'Minus', 'Comma'], 'fullscreen': ['F11'], 'edit': ['F2'], 'incdelay': ['Greater', 'Plus', 'Equal', 'Period'], 'record': ['F12'], 'help': ['F1']}, 'recorddirectory': '/tmp', 'extend': 1.0, 'keepalive': 2.0}

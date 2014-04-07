@@ -49,6 +49,7 @@ class MainWindow(QtGui.QMainWindow):
         self.settings = settings
         self.settings.settingChanged.connect(self.settingChanged)
         self.ui.delay.setText(str(settings.getSetting("delay")))
+        self.loadBindings(settings.getSetting('keybinding'))
         
     # end __init__()
     
@@ -62,50 +63,90 @@ class MainWindow(QtGui.QMainWindow):
     togglePlay = pyqtSignal()       #F7 <space>
     recordBuffer = pyqtSignal()     #F12
     
+    resized = pyqtSignal()  # hack in a signal for resize so overlay can connect
     
-    @pyqtSlot()
+    def resizeEvent(self, *args, **kwargs):
+        returncode = QtGui.QMainWindow.resizeEvent(self, *args, **kwargs)
+        self.resized.emit()
+        return returncode
+    
+    @pyqtSlot(str,object)
     def settingChanged(self, name, value):
         if name == "delay":
-            self.ui.delay.setText(value)
+            self.ui.delay.setText(str(value))
+        elif name == "keybinding":
+            self.loadBindings(value)
+            
+    def loadBindings(self, bindings):
+        '''
+        Extracts the actual key ids from the string representations of them provided.
         
+        @param bindings: dict containing keybindings (as list of strings) for each function (dict key)
+        '''
+        try:
+            # set default bindings
+            self._bindings = {'quit': [QtCore.Qt.Key_Escape, QtCore.Qt.Key_Q], 
+                            'play': [QtCore.Qt.Key_F7, QtCore.Qt.Key_Space], 
+                            'decdelay': [QtCore.Qt.Key_Less, QtCore.Qt.Key_Minus, QtCore.Qt.Key_Comma], 
+                            'fullscreen': [QtCore.Qt.Key_F11],
+                            'edit': [QtCore.Qt.Key_F2], 
+                            'incdelay': [QtCore.Qt.Key_Greater, QtCore.Qt.Key_Plus, QtCore.Qt.Key_Equal, QtCore.Qt.Key_Period], 
+                            'record': [QtCore.Qt.Key_F12], 
+                            'help': [QtCore.Qt.Key_F1]}
+            
+            # override with values from settings
+            errors = []
+            for func, keys in bindings.items():
+                kids = []
+                for key in keys:
+                    try:
+                        kid = getattr(QtCore.Qt,"Key_%s"% str(key))
+                        kids.append(kid)
+                    except AttributeError:
+                        errors.append(key)
+                self._bindings[func] = tuple(kids)
+            if len(errors) > 0:
+                print "Ignoring the following invalid key bindings (%s)" % (", ".join(errors)) 
+        except:
+            pass
     
     def keyPressEvent(self, e):
         '''Perform tasks for various key events'''
         
         # quit
-        if e.key() in (QtCore.Qt.Key_Escape, QtCore.Qt.Key_Q):
+        if e.key() in self._bindings['quit']:
             self.close()
             
         # increase (delay or frame)
-        elif e.key() in (QtCore.Qt.Key_Greater, QtCore.Qt.Key_Plus, QtCore.Qt.Key_Equal, QtCore.Qt.Key_Period):
+        elif e.key() in self._bindings['incdelay']:
             if self.application.paused:
                 self.incFrame.emit()
             else:
                 self.incDelay.emit()
         
         # decrease (delay or frame)
-        elif e.key() in (QtCore.Qt.Key_Less, QtCore.Qt.Key_Minus, QtCore.Qt.Key_Comma):
+        elif e.key() in self._bindings['decdelay']:
             if self.application.paused:
                 self.decFrame.emit()
             else:
                 self.decDelay.emit()
                 
-        elif e.key() == QtCore.Qt.Key_F1:
+        elif e.key() in self._bindings['help']:
             self.help.emit()
                 
-        elif e.key() == QtCore.Qt.Key_F2:
+        elif e.key() in self._bindings['edit']:
             self.edit.emit()
                 
-        elif e.key() in (QtCore.Qt.Key_F7, QtCore.Qt.Key_Space):
+        elif e.key() in self._bindings['play']:
             self.togglePlay.emit()
                 
-        elif e.key() == QtCore.Qt.Key_F11:
+        elif e.key() in self._bindings['fullscreen']:
             if not self.isFullScreen():
                 self.showFullScreen()
             else:
                 self.showNormal()
                 
-        elif e.key() == QtCore.Qt.Key_F12:
+        elif e.key() in self._bindings['record']:
             self.recordBuffer.emit()
         else:
             print "key: %s" % (e.key(),)
@@ -115,8 +156,8 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.videoFrame.setPixmap(pixmap)
         self.ui.videoFrame.setScaledContents(True)
         
-    def updateViewText(self, text):
-        self.ui.videoFrame.setText(text)
+#     def updateViewText(self, text):
+#         self.ui.videoFrame.setText(text)
     
     def setFrameId(self, frameid):
         self.ui.frameNum.setText(frameid)

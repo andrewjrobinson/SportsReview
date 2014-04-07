@@ -110,7 +110,7 @@ class FrameBuffer(QObject):
             return len(self._frames) / self._delay
         return 0
     
-    @pyqtSlot()
+    @pyqtSlot(str,object)
     def settingChanged(self, name, value):
         if name == "delay":
             self._delay = float(value)

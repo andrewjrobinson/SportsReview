@@ -52,7 +52,7 @@ class SettingsManager(QObject):
         
     # end __init__()
 
-    settingChanged = pyqtSignal() # name, value
+    settingChanged = pyqtSignal(str, object) # name, value
         
     def writeSettings(self, force=False):
         '''Write the settings back to the file (if needed)'''

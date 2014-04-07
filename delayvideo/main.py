@@ -17,6 +17,7 @@
 #  *  along with QualityTrim.  If not, see <http://www.gnu.org/licenses/>.       *
 #  *                                                                             *
 #  *******************************************************************************/
+import os
 '''
 Created on 22/03/2014
 
@@ -27,16 +28,14 @@ import sys
 import time
 
 import cv2
-from PyQt4 import QtGui, QtCore, Qt
+from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
-# from ui.ui import Ui_MainWindow
 import ui.mainwindow
+import ui.overlay
 import settings.settingsmanager
 import delayvideo.video.video
 import delayvideo.video.framebuffer
-# from video import Video
-# from framebuffer import FrameBuffer
 
 # try:
 #     import psutil
@@ -48,6 +47,8 @@ class DelayVideoApplication(QtCore.QObject):
     '''Performs the main logic/connections in the application'''
     
     def __init__(self, argv = [], parent=None):
+        '''Performs the main logic/connections in the application'''
+        
         QtCore.QObject.__init__(self, parent)
         
         #TODO: write startup file and log
@@ -61,6 +62,10 @@ class DelayVideoApplication(QtCore.QObject):
         # setup main window
         self.mainwindow = ui.mainwindow.MainWindow(self.settings, self)
         self.mainwindow.show()
+        
+        # add overlay
+        self.overlay = ui.overlay.OverlayWidget(self.mainwindow)
+        self.overlay.addMessage("Loading ...")
         
         # connect signals
         self.mainwindow.incDelay.connect(self.incDelay)
@@ -90,7 +95,7 @@ class DelayVideoApplication(QtCore.QObject):
         self.paused = False
     
     def cleanup(self):
-        ''''''
+        '''Called just before closing application'''
         # save the settings (only if changed)
         if self.settings:
             self.settings.writeSettings()
@@ -113,12 +118,8 @@ class DelayVideoApplication(QtCore.QObject):
             self.framei = (self.framei + 1) % 10
             if self.framei == 0:
                 self.mainwindow.setFrameRate("%.2f"%self.framebuffer.getFrameRate())
-            if delayedframe:
-                self.mainwindow.updateViewText("")
-            else:
-                self.mainwindow.updateViewText("Buffering ...")
         except TypeError:
-            self.mainwindow.updateViewText("Buffering ...")
+            pass
     
     
     @pyqtSlot()
@@ -131,6 +132,7 @@ class DelayVideoApplication(QtCore.QObject):
         if delay < 0:
             delay = 0
         self.settings.setSetting("delay", delay)
+        self.overlay.addMessage("Delay: %ss"%delay)
         return delay
     
     @pyqtSlot()
@@ -142,8 +144,9 @@ class DelayVideoApplication(QtCore.QObject):
         '''
         delay = float(self.settings.getSetting("delay")) - 0.5
         if delay < 0:
-            delay = 0
+            delay = 0.0
         self.settings.setSetting("delay", delay)
+        self.overlay.addMessage("Delay: %ss"%delay)
         return delay
     
     @pyqtSlot()
@@ -179,13 +182,13 @@ class DelayVideoApplication(QtCore.QObject):
     @pyqtSlot()
     def play(self):
         self.paused = False
-        self.pausedbuffer = None  #NOTE: maybe we shouldn't clear it hear so they can record if after resuming.
+        self.pausedbuffer = None
         self.updateFrameId()
     
     @pyqtSlot()
     def recordBuffer(self):
         if self.pausedbuffer:
-            self.pausedbuffer.writeToDir("/tmp/video_%s" % time.strftime("%Y-%m-%d_%H-%M-%S"))
+            self.pausedbuffer.writeToDir("%s%svideo_%s" % (self.settings.getSetting("recorddirectory"), os.path.sep, time.strftime("%Y-%m-%d_%H-%M-%S"), ))
 
     def updateFrameId(self):
         if self.pausedbuffer and self.paused:
