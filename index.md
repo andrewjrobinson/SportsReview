@@ -23,7 +23,8 @@ SportsReview is currently under heavy development however it already contains ma
 features.
 
 * **v0.1**: initial development release.  This is not yet a complete release but it already has quite a 
-range of useful features
+range of useful features.  Download as [&#91;.tar.gz&#93;](https://github.com/andrewjrobinson/SportsReview/archive/v0.1.tar.gz) 
+or as [&#91;.zip&#93;](https://github.com/andrewjrobinson/SportsReview/archive/v0.1.zip)
 
 ## Features
 **Current**:
