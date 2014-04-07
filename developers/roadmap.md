@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Roadmap
+title: Roadmap - SportsReview
 rooturl: ../
 ---
 
@@ -54,12 +54,12 @@ Some other ideas that may make it into version 1.0
 Versions that have been completed
 
 ## v0.1
-* Delay video tool: (new)
-	* <del>Single webcam capture [Done]</del>
-	* <del>Delay video buffer [Done]</del>
-	* <del>Pause stream [Done]</del>
-	* <del>Write buffer [Done]</del>
-	* <del>Change various settings with keypresses [Done]</del>
-	* <del>Add key-bindings in settings file</del>
-	* <del>Add write-buffer path in settings file</del>
-	* <del>Improved on-screen overlay</del>
+* Delay video tool:
+	* Single webcam capture
+	* Delay video buffer
+	* Pause stream
+	* Write buffer
+	* Change various settings with keypresses
+	* Add key-bindings in settings file
+	* Add write-buffer path in settings file
+	* Improved on-screen overlay

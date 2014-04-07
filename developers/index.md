@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Developer notes
+title: Developer notes - SportsReview
 rooturl: ../
 ---
 
