@@ -7,16 +7,6 @@ title: Roadmap
 
 # Roadmap
 The roadmap details current feature plans for next and following releases of SportsReview. 
-
-## v0.1
-* Delay video tool: (new)
-	* <del>Single webcam capture [Done]</del>
-	* <del>Delay video buffer [Done]</del>
-	* <del>Pause stream [Done]</del>
-	* <del>Write buffer [Done]</del>
-	* <del>Change various settings with keypresses [Done]</del>
-	* Add key-bindings in settings file
-	* Add write-buffer path in settings file
 	
 ## v0.2
 Probably includsions for v0.2; some may be moved to v0.3
@@ -25,7 +15,7 @@ Probably includsions for v0.2; some may be moved to v0.3
 	* Move webcam capture to module
 	* Move write buffer to module
 	* Support multiple capture devices
-	* On-screen overlay (i.e. display information to user when changing things)
+	* Improved on-screen overlay (implement multiple groups, scaled font size)
 * Analysis tool: (new)
 	* Load saved buffer
 	* Replay and various speeds
@@ -34,7 +24,6 @@ Probably includsions for v0.2; some may be moved to v0.3
 	* Split buffer
 	* Merge multiple buffers
 	* Export to video formats
-
 
 ## v1.0
 Minimum requirements for version 1.0
@@ -59,3 +48,17 @@ Minimum requirements for version 1.0
 ### v1.0 maybe's
 Some other ideas that may make it into version 1.0
 * 
+
+# Complete versions
+Versions that have been completed
+
+## v0.1
+* Delay video tool: (new)
+	* <del>Single webcam capture [Done]</del>
+	* <del>Delay video buffer [Done]</del>
+	* <del>Pause stream [Done]</del>
+	* <del>Write buffer [Done]</del>
+	* <del>Change various settings with keypresses [Done]</del>
+	* <del>Add key-bindings in settings file</del>
+	* <del>Add write-buffer path in settings file</del>
+	* <del>Improved on-screen overlay</del>
