@@ -10,7 +10,7 @@ rooturl: ../
 The roadmap details current feature plans for next and following releases of SportsReview. 
 	
 ## v0.2
-Probably includsions for v0.2; some may be moved to v0.3
+Probable inclusions for v0.2; some may be moved to v0.3
 * Delay video tool
 	* Add module API
 	* Move webcam capture to module
