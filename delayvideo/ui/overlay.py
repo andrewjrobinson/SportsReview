@@ -90,6 +90,9 @@ class OverlayWidget(QtGui.QWidget):
             
             # resize/position widget
             self.setGeometry((pw-w)/2,(ph-h)/2,w,h)
+            
+            # refresh the screen
+            self.update()
         else:
             self.hide()
         

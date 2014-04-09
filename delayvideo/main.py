@@ -17,6 +17,7 @@
 #  *  along with QualityTrim.  If not, see <http://www.gnu.org/licenses/>.       *
 #  *                                                                             *
 #  *******************************************************************************/
+import traceback
 '''
 Created on 22/03/2014
 
@@ -32,6 +33,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
 import common.modulemanager
+import common.frameset
 # import delayvideo.video.video
 import delayvideo.video.framebuffer
 import settings.settingsmanager
@@ -82,16 +84,20 @@ class DelayVideoApplication(QtCore.QObject):
             layout = self.settings.getSetting('layouts')[sellayout]
         except:
             layout = self.settings.getSetting('layouts')[0]
-        self.overlay.addMessage("Layout: %s"%layout['name'])
+#         self.overlay.addMessage("Layout: %s"%layout['name'], group='layout')
         
         # construct capture objects
         self._captureframes = []
         for cap in layout['captureframe']:
-            self._captureframes.append(common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(cap[1]))
+            self._captureframes.append(common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(self.settings, cap[1]))
         
         # frame buffer
+        self._processframes = []
+        for cap in layout['processframe']:
+            self._processframes.append(common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
+            
 #         self.video = delayvideo.video.video.Video(cv2.VideoCapture(0))
-        self.framebuffer = delayvideo.video.framebuffer.FrameBuffer(self.settings)    # place to store frames while running
+#         self.framebuffer = delayvideo.video.framebuffer.FrameBuffer(self.settings)    # place to store frames while running
         self.pausedbuffer = None            # place to store frames while paused
         
         # frame capture timer
@@ -117,27 +123,25 @@ class DelayVideoApplication(QtCore.QObject):
     
     def frame(self):
         '''Called to capture next frame (and cause a previous one to display)'''
+          
+        # capture and store frame from each capture device
+        frameset = common.frameset.FrameSet(time.time())
+        for cap in self._captureframes:
+            frameset.addFrame(cap.getFrame())
         
-        try:
-            # capture and store frame frame
-            frameset = []
-            for cap in self._captureframes:
-                frameset.append(cap.getFrame())
-            
-            # process frameset
-            self.framebuffer.push(frameset[0].asQPixmap())
-            
-            # display next frame
-            delayedframe = self.framebuffer.get()
-            if not self.paused:
-                self.mainwindow.updateView(0,delayedframe)
-            
-            # display stats and buffering message (if required)
-            self.framei = (self.framei + 1) % 10
-            if self.framei == 0:
-                self.mainwindow.setFrameRate("%.2f"%self.framebuffer.getFrameRate())
-        except TypeError:
-            pass
+        # process the frameset through the pipeline
+        procframeset = frameset
+        for proc in self._processframes:
+            procframeset = proc.process(procframeset)
+        
+        # display processed (probably delayed) frame
+        if not self.paused and procframeset is not None:
+            self.mainwindow.updateView(0,procframeset[0].asQPixmap())
+        
+        # display stats and buffering message (if required)
+#         self.framei = (self.framei + 1) % 10
+#         if self.framei == 0:
+#             self.mainwindow.setFrameRate("%.2f"%self.framebuffer.getFrameRate())
     
     
     @pyqtSlot()

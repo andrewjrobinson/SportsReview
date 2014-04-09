@@ -34,11 +34,18 @@ class UsbCamCaptureCV(object):
     __CAPTURE_GROUP__ = False
     __PROCESS_GROUP__ = False
     
-    def __init__(self, settings):
+    def __init__(self, settings, config):
+        '''
+        A module that captures frames from usb camera's (via OpenCV)
+        
+        @param settings: global settings object (from settings file)
+        @param config: the specific configuration for this instance (from layout)
+        '''
         self.settings = settings
+        self.config = config
         self._last = None
         try:
-            self.cam = cv2.VideoCapture(settings[0])
+            self.cam = cv2.VideoCapture(config[0])
         except:
             pass
 
@@ -54,9 +61,9 @@ class UsbCamCaptureCV(object):
             return CVFrame(None)
     
     @classmethod
-    def getModule(cls, settings):
+    def getModule(cls, settings, config):
         '''Returns an instance of this module for the provided settings'''
-        return cls(settings)
+        return cls(settings, config)
     
     @classmethod
     def enumerateDevices(cls):

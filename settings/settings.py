@@ -28,7 +28,7 @@ Settings:
 
 '''
 settings = {
-	'delay': 1.0,
+	'delay': 1.5,
 	'keepalive': 2.0,
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
@@ -69,21 +69,25 @@ settings = {
 	'layouts': [
 		{
 			'name': 'default',
+			'processframe': [
+				('FrameExtend', ()),
+				('FrameDelay', ()),
+				('FrameStore', ()),
+			],
 			'captureframe': [
 				('UsbCamCaptureCV', (0,)),
 			],
-            'processframe': [
-                             ('FrameBuffer', ())
-                             ],
 		},
 		{
 			'name': 'cam2',
+			'processframe': [
+				('FrameExtend', ()),
+				('FrameDelay', ()),
+				('FrameStore', ()),
+			],
 			'captureframe': [
 				('UsbCamCaptureCV', (1,)),
 			],
-            'processframe': [
-                             ('FrameBuffer', ())
-                             ],
 		},
 	],
 }
