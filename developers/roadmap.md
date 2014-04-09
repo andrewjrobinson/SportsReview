@@ -14,6 +14,7 @@ Probable inclusions for v0.2; some may be moved to v0.3
 * Delay video tool
 	* Add module API
 	* Move webcam capture to module
+	* Move frame buffer to module
 	* Move write buffer to module
 	* Support multiple capture devices
 	* Improved on-screen overlay (implement multiple groups, scaled font size)

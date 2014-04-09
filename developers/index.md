@@ -42,12 +42,13 @@ Three directories will exist to contain modules; 2 in the installation directory
 (admin disableable) user override directory (in each users home/settings).
 
 Modules can implement one or more of the following interfaces:
-* Frame: process a single frame and optionally produce an overlay or text output
-* IO: capture details from a hardware device such as video cam, on-bat accelerometers
-* FrameGroup: process a group of frames (may not need this one)
+* CaptureFrame: capture details from a hardware device such as video cam, on-bat accelerometers
+* ProcessFrame: process a single frame and optionally produce an overlay or text output
+* CaptureGroup: capture a group of details from a filesource or capture on video device
+* ProcessGroup: process a group of frames
 
 ##OS independent
-All attempts will be made to allow the code to run on Linux, Windows and Mac OSs
+All attempts will be made to allow the code to run on Linux, Windows and Mac OS
 
 ##Package friendly
 Source and settings configurable to make it easy for package maintainers to package the software.  
@@ -68,10 +69,10 @@ during install the system will backup the current installation (and keep a numbe
 ##Implementation
 
 ###Dependencies
-* Python 2.x or 3.x
-* PyQt or PySide:
+* Python 2.x or 3.x [Only tested on 2.7]
+* PyQt or PySide: [PySide not yet supported]
 * pyCV: (OpenCV)
-* git: for software updates
+* git: for software updates [not yet]
 
 ###Development Repository
 A public (open source) repo hosted on github will be used for version control and also for software 
@@ -83,5 +84,43 @@ Branches:
 * testing: for pre-release testing
 
 ###Source/runtime tree
-* settings: a directory that contains global settings files
+* aftertouches: package for application code of the after touches tool [TODO: implement this]
+	* ui: package for ui files
+	* main.py: the execution entry point
+* common: package for code that is shared among tools
+* delayvideo: package for application code of the delay analysis tool
+	* ui: package for ui files
+	* main.py: the execution entry point
+* modules: package for modules that are included within sportsreview
+	* __init__.py: currently imports all modules, later this will be done away with.
+	* *.py: one file for each sportsreview module, name all lowercase
+* settings: package for settings related modules
+	* settingsmanager.py: central place for loading and saving settings files
+	* *.py: the settings files for various configurations.  settings.py is the default.
+* support: package for system specific code. i.e. duplicate implementations of functions for each version of python etc.
+	* __init__.py: imports the correct system specific code.  i.e. 'import support' to load the correct version of the functions for your system
+	* versionX.py: implementations for version X of python.
+	* osY.py: implementations for operating system Y.  e.g. oslinux.py, oswin.py etc.
+* test: package full of random code used for R&D.  
+	* TODO: remove this and replace with unittests
 * env.py: global overrides for settings and disabling software updates
+
+###APIs
+The modules can have a number of different functions, this section describes that a module must implement to
+perform each of these functions
+
+####All modules
+* getModule(cls, settings, config): a class level function used to create an instance of the module
+	* param: settings, the global settings object
+	* param: config, module specific configuration (per instance)
+	* return: the Module instance
+* A set of class level constants describing the API's this module implements, set True each supported api
+	* __CAPTURE_FRAME__ = False
+    * __PROCESS_FRAME__ = False
+    * __CAPTURE_GROUP__ = False
+    * __PROCESS_GROUP__ = False
+
+####CaptureFrame
+* 
+
+
