@@ -95,6 +95,8 @@ class SettingsManager(QObject):
                 output += "\t" * (depth + 1)
                 if isinstance(v, (types.DictType)):
                     output += "'%s': %s,\n" % (k,self.formatDict(v, depth+1))
+                elif isinstance(v, (types.ListType)):
+                    output += "'%s': %s,\n" % (k,self.formatList(v, depth+1))
                 elif isinstance(v, (types.StringType)):
                     output += "'%s': '%s',\n" % (k,v)
                 else:
@@ -104,7 +106,26 @@ class SettingsManager(QObject):
             return output
         except:
             return str(d)
-        
+    
+    def formatList(self, l, depth):
+        '''Returns a formatted list (as string)'''
+        try:
+            output = "[\n"
+            for v in l:
+                output += "\t" * (depth + 1)
+                if isinstance(v, (types.DictType)):
+                    output += "%s,\n" % (self.formatDict(v, depth+1),)
+                elif isinstance(v, (types.ListType)):
+                    output += "%s,\n" % (self.formatList(v, depth+1),)
+                elif isinstance(v, (types.StringType)):
+                    output += "'%s',\n" % (v,)
+                else:
+                    output += "%s,\n" % (v,)
+            output += "\t" * depth
+            output += "]"
+            return output
+        except:
+            return str(l)
     def getSetting(self, name):
         try:
             return self._settings[name]

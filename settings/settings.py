@@ -28,19 +28,63 @@ Settings:
 
 '''
 settings = {
-	'delay': 2.0,
+	'delay': 1.0,
 	'keepalive': 2.0,
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
 	'keybinding': {
-		'quit': ['Escape', 'Q'],
-		'play': ['F7', 'Space'],
-		'decdelay': ['Less', 'Minus', 'Comma'],
-		'fullscreen': ['F11'],
-		'edit': ['F2'],
-		'incdelay': ['Greater', 'Plus', 'Equal', 'Period'],
-		'record': ['F12'],
-		'help': ['F1'],
+		'quit': [
+			'Escape',
+			'Q',
+		],
+		'play': [
+			'F7',
+			'Space',
+		],
+		'decdelay': [
+			'Less',
+			'Minus',
+			'Comma',
+		],
+		'fullscreen': [
+			'F11',
+		],
+		'edit': [
+			'F2',
+		],
+		'incdelay': [
+			'Greater',
+			'Plus',
+			'Equal',
+			'Period',
+		],
+		'help': [
+			'F1',
+		],
+		'record': [
+			'F12',
+		],
 	},
+	'selectedlayout': 0,
+	'layouts': [
+		{
+			'name': 'default',
+			'captureframe': [
+				('UsbCamCaptureCV', (0,)),
+			],
+            'processframe': [
+                             ('FrameBuffer', ())
+                             ],
+		},
+		{
+			'name': 'cam2',
+			'captureframe': [
+				('UsbCamCaptureCV', (1,)),
+			],
+            'processframe': [
+                             ('FrameBuffer', ())
+                             ],
+		},
+	],
 }
-__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding']
+__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding', 'selectedlayout', 'layouts']

@@ -17,7 +17,6 @@
 #  *  along with QualityTrim.  If not, see <http://www.gnu.org/licenses/>.       *
 #  *                                                                             *
 #  *******************************************************************************/
-import os
 '''
 Created on 22/03/2014
 
@@ -26,16 +25,18 @@ Created on 22/03/2014
 
 import sys
 import time
+import os
 
 import cv2
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
+import common.modulemanager
+# import delayvideo.video.video
+import delayvideo.video.framebuffer
+import settings.settingsmanager
 import ui.mainwindow
 import ui.overlay
-import settings.settingsmanager
-import delayvideo.video.video
-import delayvideo.video.framebuffer
 
 # try:
 #     import psutil
@@ -65,7 +66,7 @@ class DelayVideoApplication(QtCore.QObject):
         
         # add overlay
         self.overlay = ui.overlay.OverlayWidget(self.mainwindow)
-        self.overlay.addMessage("Loading ...")
+        self.overlay.addMessage("Loading ...", timeout=self.settings.getSetting('delay'))
         
         # connect signals
         self.mainwindow.incDelay.connect(self.incDelay)
@@ -75,8 +76,21 @@ class DelayVideoApplication(QtCore.QObject):
         self.mainwindow.togglePlay.connect(self.togglePlay)
         self.mainwindow.recordBuffer.connect(self.recordBuffer)
         
-        # get capturer and frame buffer
-        self.video = delayvideo.video.video.Video(cv2.VideoCapture(0))
+        # get layout
+        sellayout = self.settings.getSetting('selectedlayout')
+        try:
+            layout = self.settings.getSetting('layouts')[sellayout]
+        except:
+            layout = self.settings.getSetting('layouts')[0]
+        self.overlay.addMessage("Layout: %s"%layout['name'])
+        
+        # construct capture objects
+        self._captureframes = []
+        for cap in layout['captureframe']:
+            self._captureframes.append(common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(cap[1]))
+        
+        # frame buffer
+#         self.video = delayvideo.video.video.Video(cv2.VideoCapture(0))
         self.framebuffer = delayvideo.video.framebuffer.FrameBuffer(self.settings)    # place to store frames while running
         self.pausedbuffer = None            # place to store frames while paused
         
@@ -106,8 +120,12 @@ class DelayVideoApplication(QtCore.QObject):
         
         try:
             # capture and store frame frame
-            self.video.captureFrame()
-            self.framebuffer.push(self.video.convertFrame())
+            frameset = []
+            for cap in self._captureframes:
+                frameset.append(cap.getFrame())
+            
+            # process frameset
+            self.framebuffer.push(frameset[0].asQPixmap())
             
             # display next frame
             delayedframe = self.framebuffer.get()
