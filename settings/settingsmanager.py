@@ -17,6 +17,7 @@
 #  *  along with QualityTrim.  If not, see <http://www.gnu.org/licenses/>.       *
 #  *                                                                             *
 #  *******************************************************************************/
+import types
 '''
 Responsible for loading and saving settings and issuing signals when changes occur
 
@@ -48,6 +49,13 @@ class SettingsManager(QObject):
         
         self._settings = settingsmodule.settings
         self._docstring = settingsmodule.__doc__
+        try:
+            if isinstance(settingsmodule.__order__, types.ListType):
+                self._order = settingsmodule.__order__
+            else:
+                self._order = []
+        except:
+            self._order = []
         self._dirty = False
         
     # end __init__()
@@ -60,12 +68,42 @@ class SettingsManager(QObject):
             f = open(self._settingsfilename, 'w')
             if f:
                 f.write("'''%s'''\n" % self._docstring)
-                f.write("settings = %s\n" % self._settings)
+                f.write("settings = %s\n" % self.formatDict(self._settings))
+                f.write("__order__= %s\n" % self._order)
                 self._dirty = False
                 f.close()
                 return True
             return False
         return True
+    
+    def formatDict(self, d, depth=0):
+        '''Returns a formatted dict (as string)'''
+        try:
+            # calculate the order of dict keys
+            if depth == 0:
+                missing = [x for x in d if x not in self._order]
+                keys = [x for x in self._order if x in d]
+                keys.extend(missing)
+                self._order = keys
+            else:
+                keys = d.keys()
+            
+            # print each element of dict
+            output = "{\n"
+            for k in keys:
+                v = d[k]
+                output += "\t" * (depth + 1)
+                if isinstance(v, (types.DictType)):
+                    output += "'%s': %s,\n" % (k,self.formatDict(v, depth+1))
+                elif isinstance(v, (types.StringType)):
+                    output += "'%s': '%s',\n" % (k,v)
+                else:
+                    output += "'%s': %s,\n" % (k,v)
+            output += "\t" * depth
+            output += "}"
+            return output
+        except:
+            return str(d)
         
     def getSetting(self, name):
         try:

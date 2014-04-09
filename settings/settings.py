@@ -11,9 +11,6 @@ K = keepalive
 D = delay
 E = extend
 
-
-
-
 Settings:
 - delay:     float, seconds between capturing a frame to displaying it when in playback mode.
 - keepalive: float, seconds to keep frames for after they are displayed (i.e. used for backup in paused mode)
@@ -30,4 +27,20 @@ Settings:
 - recorddirectory: str, the output directory for recorded captures.
 
 '''
-settings = {'delay': 2.0, 'keybinding': {'quit': ['Escape', 'Q'], 'play': ['F7', 'Space'], 'decdelay': ['Less', 'Minus', 'Comma'], 'fullscreen': ['F11'], 'edit': ['F2'], 'incdelay': ['Greater', 'Plus', 'Equal', 'Period'], 'record': ['F12'], 'help': ['F1']}, 'recorddirectory': '/tmp', 'extend': 1.0, 'keepalive': 2.0}
+settings = {
+	'delay': 2.0,
+	'keepalive': 2.0,
+	'extend': 1.0,
+	'recorddirectory': '/tmp',
+	'keybinding': {
+		'quit': ['Escape', 'Q'],
+		'play': ['F7', 'Space'],
+		'decdelay': ['Less', 'Minus', 'Comma'],
+		'fullscreen': ['F11'],
+		'edit': ['F2'],
+		'incdelay': ['Greater', 'Plus', 'Equal', 'Period'],
+		'record': ['F12'],
+		'help': ['F1'],
+	},
+}
+__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding']
