@@ -93,7 +93,7 @@ class OverlayWidget(QtGui.QWidget):
         else:
             self.hide()
         
-    def addMessage(self, message, group=None):
+    def addMessage(self, message, group=None, timeout=1.5):
         '''
         Adds a message to the overlay.  Only one message per group will be 
         displayed at once; a second one will override the first and update the 
@@ -101,8 +101,9 @@ class OverlayWidget(QtGui.QWidget):
         
         @param message: string message to display
         @param group: groupname for message
+        @param timeout: the amount of seconds to keep message showing
         '''
-        timeout = 1.5 # seconds, TODO: make this a setting
+        #TODO: make timeout default to a setting value
         
         self._messages[group] = (time.time() + timeout, message)
         self.updateWidgetPosition()
