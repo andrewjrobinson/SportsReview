@@ -255,7 +255,9 @@ class DelayVideoApplication(QtCore.QObject):
 
 def main(argv):
     
-    app = QtGui.QApplication(argv)
+    args = argv[1:]
+    args.insert(0, "Delay Analysis")
+    app = QtGui.QApplication(args)
     runtime = DelayVideoApplication()
     rc = app.exec_()
     runtime.cleanup()

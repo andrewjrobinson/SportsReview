@@ -28,7 +28,7 @@ Settings:
 
 '''
 settings = {
-	'delay': 1.5,
+	'delay': 2.0,
 	'keepalive': 2.0,
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
@@ -48,7 +48,7 @@ settings = {
 			('core', 'incframe'),
 		],
 		'F12': [
-			('processgroup', 'RecordStillCV', ),
+			('processgroup', 'RecordStillCV'),
 		],
 		'F11': [
 			('core', 'fullscreen'),

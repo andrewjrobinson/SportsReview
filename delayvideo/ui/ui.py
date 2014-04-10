@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'delayvideo/ui/mainwindow.ui'
 #
-# Created: Fri Mar 28 20:49:42 2014
+# Created: Thu Apr 10 18:46:39 2014
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,6 +27,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(690, 541)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/common/resources/icon.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -38,6 +41,8 @@ class Ui_MainWindow(object):
         self.splitter.setObjectName(_fromUtf8("splitter"))
         self.videoFrame = QtGui.QLabel(self.splitter)
         self.videoFrame.setText(_fromUtf8(""))
+        self.videoFrame.setPixmap(QtGui.QPixmap(_fromUtf8(":/common/resources/icon.svg")))
+        self.videoFrame.setAlignment(QtCore.Qt.AlignCenter)
         self.videoFrame.setObjectName(_fromUtf8("videoFrame"))
         self.buttonArea = QtGui.QWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Minimum)
@@ -84,7 +89,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Delay Analysis - SportsReview", None))
         self.label_2.setText(_translate("MainWindow", "Frame rate:", None))
         self.label_5.setText(_translate("MainWindow", "<html><head/><body><p>\'+.=&gt;\' = increase delay, next frame<br/>\'-,&lt;\' = decrease delay, previous frame<br/>Esc = quit</p></body></html>", None))
         self.frameRate.setText(_translate("MainWindow", "30", None))
@@ -94,3 +99,4 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Delay:", None))
         self.label_3.setText(_translate("MainWindow", "Frame:", None))
 
+import resources_rc

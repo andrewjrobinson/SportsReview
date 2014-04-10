@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Delay Analysis - SportsReview</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../common/resources.qrc">
+    <normaloff>:/common/resources/icon.svg</normaloff>:/common/resources/icon.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -29,6 +33,12 @@
       <widget class="QLabel" name="videoFrame">
        <property name="text">
         <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../../common/resources.qrc">:/common/resources/icon.svg</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
       <widget class="QWidget" name="buttonArea" native="true">
@@ -114,6 +124,8 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../common/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
