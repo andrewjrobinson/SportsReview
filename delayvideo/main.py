@@ -77,7 +77,9 @@ class DelayVideoApplication(QtCore.QObject):
         self.mainwindow.incFrame.connect(self.incFrame)
         self.mainwindow.decFrame.connect(self.decFrame)
         self.mainwindow.togglePlay.connect(self.togglePlay)
-        self.mainwindow.recordBuffer.connect(self.recordBuffer)
+        self.mainwindow.processFrame.connect(self.processFrame)
+        self.mainwindow.processGroup.connect(self.processGroup)
+#         self.mainwindow.recordBuffer.connect(self.recordBuffer)
         
         # get layout
         sellayout = self.settings.getSetting('selectedlayout')
@@ -97,6 +99,8 @@ class DelayVideoApplication(QtCore.QObject):
         for cap in layout['processframe']:
             self._processframes.append(common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
         self.pausedbuffer = None            # place to store frames while paused
+        
+        self._processgrouprandom = {}
         
         # frame capture timer
         self._timer = QtCore.QTimer(self)
@@ -148,12 +152,12 @@ class DelayVideoApplication(QtCore.QObject):
         Increases delay by 0.5 seconds
         @return: float, the new delay
         '''
-        delay = float(self.settings.getSetting("delay")) + 0.5
-        if delay < 0:
-            delay = 0
-        self.settings.setSetting("delay", delay)
-        self.overlay.addMessage("Delay: %ss"%delay)
-        return delay
+        if not self.paused:
+            delay = float(self.settings.getSetting("delay")) + 0.5
+            if delay > 20:
+                delay = 20.0
+            self.settings.setSetting("delay", delay)
+            self.overlay.addMessage("Delay: %ss"%delay)
     
     @pyqtSlot()
     def decDelay(self):
@@ -162,12 +166,12 @@ class DelayVideoApplication(QtCore.QObject):
         
         @return: float, the new delay
         '''
-        delay = float(self.settings.getSetting("delay")) - 0.5
-        if delay < 0:
-            delay = 0.0
-        self.settings.setSetting("delay", delay)
-        self.overlay.addMessage("Delay: %ss"%delay)
-        return delay
+        if not self.paused:
+            delay = float(self.settings.getSetting("delay")) - 0.5
+            if delay < 0:
+                delay = 0.0
+            self.settings.setSetting("delay", delay)
+            self.overlay.addMessage("Delay: %ss"%delay)
     
     @pyqtSlot()
     def incFrame(self):
@@ -211,11 +215,37 @@ class DelayVideoApplication(QtCore.QObject):
         self.pausedbuffer = None
         self.updateFrameId()
     
-    @pyqtSlot()
-    def recordBuffer(self):
-        if self.pausedbuffer:
-            self.pausedbuffer.writeToDir("%s%svideo_%s" % (self.settings.getSetting("recorddirectory"), os.path.sep, time.strftime("%Y-%m-%d_%H-%M-%S"), ))
+#     @pyqtSlot()
+#     def recordBuffer(self):
+#         if self.pausedbuffer:
+#             self.pausedbuffer.writeToDir("%s%svideo_%s" % (self.settings.getSetting("recorddirectory"), os.path.sep, time.strftime("%Y-%m-%d_%H-%M-%S"), ))
 
+    @pyqtSlot(str, object)
+    def processFrame(self, modulename, config):
+        ''''''
+        if self.paused:
+            # get module implementation
+            if modulename in self._processframerandom:
+                module = self._processframerandom[modulename]
+            else:
+                module = common.modulemanager.ModuleManager.getProcessFrameModule(modulename).getModule(self.settings, config)
+                self._processframerandom[modulename] = module
+            
+            module.process(self.pausedbuffer.current())
+        
+    @pyqtSlot(str, object)
+    def processGroup(self, modulename, config):
+        ''''''
+        if self.paused:
+            # get module implementation
+            if modulename in self._processgrouprandom:
+                module = self._processgrouprandom[modulename]
+            else:
+                module = common.modulemanager.ModuleManager.getProcessGroupModule(modulename).getModule(self.settings, config)
+                self._processgrouprandom[modulename] = module
+                
+            module.processGroup(self.pausedbuffer)
+    
     def updateFrameId(self):
         if self.pausedbuffer and self.paused:
             self.mainwindow.setFrameId("%s/%s" % (self.pausedbuffer.index() + 1, len(self.pausedbuffer)))

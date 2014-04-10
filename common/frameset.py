@@ -37,3 +37,5 @@ class FrameSet(object):
         self._frames.__delattr__(key)
     def __getitem__(self, key):
         return self._frames[key]
+    def __len__(self):
+        return len(self._frames)

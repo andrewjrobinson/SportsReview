@@ -136,4 +136,7 @@ class FrameGroup(object):
     def __len__(self, *args, **kwargs):
         return len(self._frames)
     
+    def __getitem__(self, k):
+        return self._frames[k]
+    
 #end class FrameGroup

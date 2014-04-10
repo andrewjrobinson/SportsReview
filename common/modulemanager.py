@@ -29,6 +29,7 @@ class ModuleManager(object):
     '''lists available module classes for type'''
     _captureframemodules = None
     _processframemodules = None
+    _processgroupmodules = None
     
     @classmethod
     def getCaptureFrameModules(cls, refresh=True):
@@ -42,7 +43,7 @@ class ModuleManager(object):
                     if inspect.isclass(obj):
                         try:
                             if obj.__CAPTURE_FRAME__ == True:
-                                cls._captureframemodules[name] = obj
+                                cls._captureframemodules[str(name)] = obj
                         except:
                             pass
         return cls._captureframemodules.values()
@@ -52,7 +53,7 @@ class ModuleManager(object):
         '''Gets a single capture frame module by name'''
         
         cls.getCaptureFrameModules(False)
-        return cls._captureframemodules[name]
+        return cls._captureframemodules[str(name)]
     
     @classmethod
     def getProcessFrameModules(cls, refresh=True):
@@ -66,7 +67,7 @@ class ModuleManager(object):
                     if inspect.isclass(obj):
                         try:
                             if obj.__PROCESS_FRAME__ == True:
-                                cls._processframemodules[name] = obj
+                                cls._processframemodules[str(name)] = obj
                         except:
                             pass
         return cls._processframemodules.values()
@@ -76,4 +77,28 @@ class ModuleManager(object):
         '''Gets a single Process frame module by name'''
         
         cls.getProcessFrameModules(False)
-        return cls._processframemodules[name]
+        return cls._processframemodules[str(name)]
+    
+    @classmethod
+    def getProcessGroupModules(cls, refresh=True):
+        '''Gets a list of all Process group modules (class)'''
+        if refresh or cls._processgroupmodules is None:
+            cls._processgroupmodules = {}
+            pymods = [modules.__dict__.get(a) for a in dir(modules)  if inspect.ismodule(modules.__dict__.get(a))]
+            for pymod in pymods:
+                for name in dir(pymod):
+                    obj = getattr(pymod, name, None)
+                    if inspect.isclass(obj):
+                        try:
+                            if obj.__PROCESS_GROUP__ == True:
+                                cls._processgroupmodules[str(name)] = obj
+                        except:
+                            pass
+        return cls._processgroupmodules.values()
+
+    @classmethod
+    def getProcessGroupModule(cls, name):
+        '''Gets a single Process group module by name'''
+        
+        cls.getProcessGroupModules(False)
+        return cls._processgroupmodules[str(name)]

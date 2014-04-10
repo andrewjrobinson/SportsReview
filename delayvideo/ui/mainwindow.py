@@ -49,6 +49,7 @@ class MainWindow(QtGui.QMainWindow):
         self.settings = settings
         self.settings.settingChanged.connect(self.settingChanged)
         self.ui.delay.setText(str(settings.getSetting("delay")))
+        self._bindings = {}
         self.loadBindings(settings.getSetting('keybinding'))
         
     # end __init__()
@@ -62,6 +63,11 @@ class MainWindow(QtGui.QMainWindow):
     edit = pyqtSignal()             #F2
     togglePlay = pyqtSignal()       #F7 <space>
     recordBuffer = pyqtSignal()     #F12
+    
+    # signals (new)
+#     core = pyqtSignal(str, object)
+    processFrame = pyqtSignal(str, object)
+    processGroup = pyqtSignal(str, object)
     
     resized = pyqtSignal()  # hack in a signal for resize so overlay can connect
     
@@ -81,75 +87,109 @@ class MainWindow(QtGui.QMainWindow):
         '''
         Extracts the actual key ids from the string representations of them provided.
         
-        @param bindings: dict containing keybindings (as list of strings) for each function (dict key)
+        @param bindings: dict containing keybindings {'<keyname>': [('<group>', '<function>', <optionargs>,...), ...]} 
         '''
         try:
-            # set default bindings
-            self._bindings = {'quit': [QtCore.Qt.Key_Escape, QtCore.Qt.Key_Q], 
-                            'play': [QtCore.Qt.Key_F7, QtCore.Qt.Key_Space], 
-                            'decdelay': [QtCore.Qt.Key_Less, QtCore.Qt.Key_Minus, QtCore.Qt.Key_Comma], 
-                            'fullscreen': [QtCore.Qt.Key_F11],
-                            'edit': [QtCore.Qt.Key_F2], 
-                            'incdelay': [QtCore.Qt.Key_Greater, QtCore.Qt.Key_Plus, QtCore.Qt.Key_Equal, QtCore.Qt.Key_Period], 
-                            'record': [QtCore.Qt.Key_F12], 
-                            'help': [QtCore.Qt.Key_F1]}
             
-            # override with values from settings
+            groups = {'core': None,
+                    'processframe': lambda m,c: self.processFrame.emit(m,c),
+                    'processgroup': lambda m,c: self.processGroup.emit(m,c),
+                    }
+            corefuncs = {
+                         'quit': lambda a,b: self.close(),
+                         'play': lambda a,b: self.togglePlay.emit(),
+                         'incdelay': lambda a,b: self.incDelay.emit(),
+                         'decdelay': lambda a,b: self.decDelay.emit(),
+                         'incframe': lambda a,b: self.incFrame.emit(),
+                         'decframe': lambda a,b: self.decFrame.emit(),
+                         'fullscreen': lambda a,b: self.toggleFullScreen(),
+                         'edit': lambda a,b: self.edit.emit(),
+                         'help': lambda a,b: self.help.emit(),
+                         }
+            
             errors = []
-            for func, keys in bindings.items():
-                kids = []
-                for key in keys:
+            self._bindings = {}
+            for keystr, events in bindings.items():
+                for event in events:
                     try:
-                        kid = getattr(QtCore.Qt,"Key_%s"% str(key))
-                        kids.append(kid)
+                        # convert to integer
+                        keyint = getattr(QtCore.Qt,"Key_%s"% str(keystr))
+                        
+                        # get functions to perform tasks
+                        func = groups[event[0]]
+                        if func is None:
+                            func = corefuncs[event[1]]
+                        
+                        if keyint in self._bindings:
+                            self._bindings[keyint].append((func, event[1], event[2:]))
+                        else:
+                            self._bindings[keyint] = [(func, event[1], event[2:])]
                     except AttributeError:
-                        errors.append(key)
-                self._bindings[func] = tuple(kids)
+                        errors.append("Key: %s" %keystr)
+                    except KeyError:
+                        errors.append("Group: %s" %keystr)
+
             if len(errors) > 0:
                 print "Ignoring the following invalid key bindings (%s)" % (", ".join(errors)) 
         except:
             pass
     
+    def toggleFullScreen(self):
+        '''Toggles between fullscreen and normal mode'''
+        if not self.isFullScreen():
+            self.showFullScreen()
+        else:
+            self.showNormal()
+    
     def keyPressEvent(self, e):
         '''Perform tasks for various key events'''
         
-        # quit
-        if e.key() in self._bindings['quit']:
-            self.close()
-            
-        # increase (delay or frame)
-        elif e.key() in self._bindings['incdelay']:
-            if self.application.paused:
-                self.incFrame.emit()
-            else:
-                self.incDelay.emit()
-        
-        # decrease (delay or frame)
-        elif e.key() in self._bindings['decdelay']:
-            if self.application.paused:
-                self.decFrame.emit()
-            else:
-                self.decDelay.emit()
-                
-        elif e.key() in self._bindings['help']:
-            self.help.emit()
-                
-        elif e.key() in self._bindings['edit']:
-            self.edit.emit()
-                
-        elif e.key() in self._bindings['play']:
-            self.togglePlay.emit()
-                
-        elif e.key() in self._bindings['fullscreen']:
-            if not self.isFullScreen():
-                self.showFullScreen()
-            else:
-                self.showNormal()
-                
-        elif e.key() in self._bindings['record']:
-            self.recordBuffer.emit()
+        if e.key() in self._bindings:
+            for binding in self._bindings[e.key()]:
+                func, action, config = binding
+                func(action, config)
         else:
             print "key: %s" % (e.key(),)
+    
+#     The old keybinding structure
+#     'keybinding': {
+#         'quit': [
+#             'Escape',
+#             'Q',
+#         ],
+#         'play': [
+#             'F7',
+#             'Space',
+#         ],
+#         'decdelay': [
+#             'Less',
+#             'Minus',
+#             'Comma',
+#         ],
+#         'fullscreen': [
+#             'F11',
+#         ],
+#         'edit': [
+#             'F2',
+#         ],
+#         'incdelay': [
+#             'Greater',
+#             'Plus',
+#             'Equal',
+#             'Period',
+#         ],
+#         'help': [
+#             'F1',
+#         ],
+#     },
+#             
+#          'processgroup': [
+#                 ('RecordStillCV', (), ('F12',)),
+#             ],
+        
+        
+        
+        
     
     def updateView(self, vid, pixmap):
         '''Updates a view to display given pixmap'''

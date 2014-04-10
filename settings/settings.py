@@ -33,36 +33,57 @@ settings = {
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
 	'keybinding': {
-		'quit': [
-			'Escape',
-			'Q',
+		'Space': [
+			('core', 'play'),
 		],
-		'play': [
-			'F7',
-			'Space',
+		'Equal': [
+			('core', 'incdelay'),
+			('core', 'incframe'),
 		],
-		'decdelay': [
-			'Less',
-			'Minus',
-			'Comma',
+		'Q': [
+			('core', 'quit'),
 		],
-		'fullscreen': [
-			'F11',
+		'Plus': [
+			('core', 'incdelay'),
+			('core', 'incframe'),
 		],
-		'edit': [
-			'F2',
+		'F12': [
+			('processgroup', 'RecordStillCV', ),
 		],
-		'incdelay': [
-			'Greater',
-			'Plus',
-			'Equal',
-			'Period',
+		'F11': [
+			('core', 'fullscreen'),
 		],
-		'help': [
-			'F1',
+		'Minus': [
+			('core', 'decdelay'),
+			('core', 'decframe'),
 		],
-		'record': [
-			'F12',
+		'F1': [
+			('core', 'help'),
+		],
+		'F2': [
+			('core', 'edit'),
+		],
+		'Greater': [
+			('core', 'incdelay'),
+			('core', 'incframe'),
+		],
+		'Less': [
+			('core', 'decdelay'),
+			('core', 'decframe'),
+		],
+		'F7': [
+			('core', 'play'),
+		],
+		'Period': [
+			('core', 'incdelay'),
+			('core', 'incframe'),
+		],
+		'Comma': [
+			('core', 'decdelay'),
+			('core', 'decframe'),
+		],
+		'Escape': [
+			('core', 'quit'),
 		],
 	},
 	'selectedlayout': 0,
