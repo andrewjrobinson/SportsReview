@@ -28,40 +28,36 @@ Settings:
 
 '''
 settings = {
-	'delay': 2.0,
+	'delay': 1.0,
 	'keepalive': 2.0,
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
 	'keybinding': {
-		'Space': [
-			('core', 'play'),
+		'Comma': [
+			('core', 'decdelay'),
+			('core', 'decframe'),
 		],
 		'Equal': [
 			('core', 'incdelay'),
 			('core', 'incframe'),
 		],
-		'Q': [
+		'Escape': [
 			('core', 'quit'),
-		],
-		'Plus': [
-			('core', 'incdelay'),
-			('core', 'incframe'),
-		],
-		'F12': [
-			('processgroup', 'RecordStillCV'),
-		],
-		'F11': [
-			('core', 'fullscreen'),
-		],
-		'Minus': [
-			('core', 'decdelay'),
-			('core', 'decframe'),
 		],
 		'F1': [
 			('core', 'help'),
 		],
+		'F11': [
+			('core', 'fullscreen'),
+		],
+		'F12': [
+			('processgroup', 'RecordStillCV'),
+		],
 		'F2': [
 			('core', 'edit'),
+		],
+		'F7': [
+			('core', 'play'),
 		],
 		'Greater': [
 			('core', 'incdelay'),
@@ -71,43 +67,69 @@ settings = {
 			('core', 'decdelay'),
 			('core', 'decframe'),
 		],
-		'F7': [
-			('core', 'play'),
+		'Minus': [
+			('core', 'decdelay'),
+			('core', 'decframe'),
 		],
 		'Period': [
 			('core', 'incdelay'),
 			('core', 'incframe'),
 		],
-		'Comma': [
-			('core', 'decdelay'),
-			('core', 'decframe'),
+		'Plus': [
+			('core', 'incdelay'),
+			('core', 'incframe'),
 		],
-		'Escape': [
+		'Q': [
 			('core', 'quit'),
+		],
+		'Space': [
+			('core', 'play'),
 		],
 	},
 	'selectedlayout': 0,
 	'layouts': [
 		{
+			'captureframe': [
+				('UsbCamCaptureCV', (0,)),
+			],
 			'name': 'default',
 			'processframe': [
 				('FrameExtend', ()),
 				('FrameDelay', ()),
 				('FrameStore', ()),
 			],
-			'captureframe': [
-				('UsbCamCaptureCV', (0,)),
+			'screen': [
+				(0, 0.0, 0.0, 0.9, 1.0),
 			],
 		},
 		{
+			'captureframe': [
+				('UsbCamCaptureCV', (1,)),
+			],
 			'name': 'cam2',
 			'processframe': [
 				('FrameExtend', ()),
 				('FrameDelay', ()),
 				('FrameStore', ()),
 			],
+			'screen': [
+				(0, 0.0, 0.0, 1.0, 1.0),
+			],
+		},
+		{
 			'captureframe': [
+				('UsbCamCaptureCV', (0,)),
 				('UsbCamCaptureCV', (1,)),
+			],
+			'name': 'cam2',
+			'processframe': [
+				('FrameExtend', ()),
+				('FrameDelay', ()),
+				('FrameStore', ()),
+			],
+			'screen': [
+				(0, 0.0, 0.0, 1.0, 0.7),
+				(1, 0.7, 0.6, 1.0, 1.0),
 			],
 		},
 	],

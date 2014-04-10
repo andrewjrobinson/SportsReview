@@ -79,7 +79,6 @@ class DelayVideoApplication(QtCore.QObject):
         self.mainwindow.togglePlay.connect(self.togglePlay)
         self.mainwindow.processFrame.connect(self.processFrame)
         self.mainwindow.processGroup.connect(self.processGroup)
-#         self.mainwindow.recordBuffer.connect(self.recordBuffer)
         
         # get layout
         sellayout = self.settings.getSetting('selectedlayout')
@@ -138,7 +137,7 @@ class DelayVideoApplication(QtCore.QObject):
         
         # display processed (probably delayed) frame
         if not self.paused and procframeset is not None:
-            self.mainwindow.updateView(0,procframeset[0].asQPixmap())
+            self.mainwindow.renderFrameset(procframeset)
         
         # display stats and buffering message (if required)
 #         self.framei = (self.framei + 1) % 10
@@ -176,17 +175,17 @@ class DelayVideoApplication(QtCore.QObject):
     @pyqtSlot()
     def incFrame(self):
         if self.paused and self.pausedbuffer:
-            frame = self.pausedbuffer.next()
-            if frame:
-                self.mainwindow.updateView(0, frame[0].asQPixmap())
+            frameset = self.pausedbuffer.next()
+            if frameset is not None:
+                self.mainwindow.renderFrameset(frameset)
                 self.updateFrameId()
     
     @pyqtSlot()
     def decFrame(self):
         if self.paused and self.pausedbuffer:
-            frame = self.pausedbuffer.prev()
-            if frame:
-                self.mainwindow.updateView(0, frame[0].asQPixmap())
+            frameset = self.pausedbuffer.prev()
+            if frameset is not None:
+                self.mainwindow.renderFrameset(frameset)
                 self.updateFrameId()
     
     @pyqtSlot()
@@ -206,7 +205,7 @@ class DelayVideoApplication(QtCore.QObject):
             proc.giveFrames(self.pausedbuffer)
             
         # update UI
-        self.mainwindow.updateView(0, self.pausedbuffer.current()[0].asQPixmap())
+        self.mainwindow.renderFrameset(self.pausedbuffer.current())
         self.updateFrameId()
     
     @pyqtSlot()
@@ -215,11 +214,6 @@ class DelayVideoApplication(QtCore.QObject):
         self.pausedbuffer = None
         self.updateFrameId()
     
-#     @pyqtSlot()
-#     def recordBuffer(self):
-#         if self.pausedbuffer:
-#             self.pausedbuffer.writeToDir("%s%svideo_%s" % (self.settings.getSetting("recorddirectory"), os.path.sep, time.strftime("%Y-%m-%d_%H-%M-%S"), ))
-
     @pyqtSlot(str, object)
     def processFrame(self, modulename, config):
         ''''''

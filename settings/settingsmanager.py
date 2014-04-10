@@ -87,6 +87,7 @@ class SettingsManager(QObject):
                 self._order = keys
             else:
                 keys = d.keys()
+                keys.sort()
             
             # print each element of dict
             output = "{\n"

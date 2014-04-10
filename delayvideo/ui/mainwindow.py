@@ -29,6 +29,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot, pyqtSignal
 from ui import Ui_MainWindow
 import time
+from delayvideo.ui.render import RenderWidget
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -43,14 +44,23 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        self._renderwidgets = [
+                               RenderWidget(self),
+                               RenderWidget(self),
+                               RenderWidget(self),
+                               RenderWidget(self),
+                               ]
+        
         self.update()
         self.application = application
         
         self.settings = settings
         self.settings.settingChanged.connect(self.settingChanged)
         self.ui.delay.setText(str(settings.getSetting("delay")))
+        self._loadScreens(self.settings.getSetting("layouts")[self.settings.getSetting("selectedlayout")]["screen"])
         self._bindings = {}
-        self.loadBindings(settings.getSetting('keybinding'))
+        self._loadBindings(settings.getSetting('keybinding'))
         
     # end __init__()
     
@@ -65,11 +75,9 @@ class MainWindow(QtGui.QMainWindow):
     recordBuffer = pyqtSignal()     #F12
     
     # signals (new)
-#     core = pyqtSignal(str, object)
     processFrame = pyqtSignal(str, object)
     processGroup = pyqtSignal(str, object)
-    
-    resized = pyqtSignal()  # hack in a signal for resize so overlay can connect
+    resized = pyqtSignal()
     
     def resizeEvent(self, *args, **kwargs):
         returncode = QtGui.QMainWindow.resizeEvent(self, *args, **kwargs)
@@ -81,9 +89,20 @@ class MainWindow(QtGui.QMainWindow):
         if name == "delay":
             self.ui.delay.setText(str(value))
         elif name == "keybinding":
-            self.loadBindings(value)
-            
-    def loadBindings(self, bindings):
+            self._loadBindings(value)
+        elif name == "selectedlayout":
+            self._loadScreens(self.settings.getSetting("layouts")[value]["screen"])
+    
+    def _loadScreens(self, screens):
+        self._screens = screens
+        self._layouts = min(4, len(self._screens))
+#         print "Layouts: %s" % self._layouts
+#         print "Screens: %s" % self._screens
+        for i in range(self._layouts):
+            self._renderwidgets[i].setLayout(screens[i])
+        
+    
+    def _loadBindings(self, bindings):
         '''
         Extracts the actual key ids from the string representations of them provided.
         
@@ -151,56 +170,22 @@ class MainWindow(QtGui.QMainWindow):
         else:
             print "key: %s" % (e.key(),)
     
-#     The old keybinding structure
-#     'keybinding': {
-#         'quit': [
-#             'Escape',
-#             'Q',
-#         ],
-#         'play': [
-#             'F7',
-#             'Space',
-#         ],
-#         'decdelay': [
-#             'Less',
-#             'Minus',
-#             'Comma',
-#         ],
-#         'fullscreen': [
-#             'F11',
-#         ],
-#         'edit': [
-#             'F2',
-#         ],
-#         'incdelay': [
-#             'Greater',
-#             'Plus',
-#             'Equal',
-#             'Period',
-#         ],
-#         'help': [
-#             'F1',
-#         ],
-#     },
-#             
-#          'processgroup': [
-#                 ('RecordStillCV', (), ('F12',)),
-#             ],
-        
-        
-        
-        
+    def renderFrameset(self, frameset):
+        '''
+        Renders the relevent frames from the frameset to screen
+        '''
+        for i in range(self._layouts):
+            self._renderwidgets[i].process(frameset)
     
-    def updateView(self, vid, pixmap):
-        '''Updates a view to display given pixmap'''
-        self.ui.videoFrame.setPixmap(pixmap)
-        self.ui.videoFrame.setScaledContents(True)
-        
-#     def updateViewText(self, text):
-#         self.ui.videoFrame.setText(text)
+#     def updateView(self, vid, pixmap):
+#         '''Updates a view to display given pixmap'''
+#         self.ui.videoFrame.setPixmap(pixmap)
+#         self.ui.videoFrame.setScaledContents(True)
     
     def setFrameId(self, frameid):
         self.ui.frameNum.setText(frameid)
         
     def setFrameRate(self, framerate):
         self.ui.frameRate.setText(framerate)
+
+# end class MainWindow
