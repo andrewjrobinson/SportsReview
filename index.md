@@ -1,6 +1,7 @@
 ---
 layout: home
 title: SportsReview - free sports analysis package
+keywords: SportsReview, video, analysis, video analysis, cricket, baseball, cycling, golf, soccer, football, afl, nfl
 ---
 
 Home

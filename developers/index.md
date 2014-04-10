@@ -2,6 +2,7 @@
 layout: page
 title: Developer notes - SportsReview
 rooturl: ../
+keywords: SportsReview, developers, development
 ---
 
 [Home](../index.html) > Design notes
@@ -92,13 +93,13 @@ Branches:
 	* ui: package for ui files
 	* main.py: the execution entry point
 * modules: package for modules that are included within sportsreview
-	* __init__.py: currently imports all modules, later this will be done away with.
-	* *.py: one file for each sportsreview module, name all lowercase
+	* \_\_init\_\_.py: currently imports all modules, later this will be done away with.
+	* \*.py: one file for each sportsreview module, name all lowercase
 * settings: package for settings related modules
 	* settingsmanager.py: central place for loading and saving settings files
-	* *.py: the settings files for various configurations.  settings.py is the default.
+	* \*.py: the settings files for various configurations.  settings.py is the default.
 * support: package for system specific code. i.e. duplicate implementations of functions for each version of python etc.
-	* __init__.py: imports the correct system specific code.  i.e. 'import support' to load the correct version of the functions for your system
+	* \_\_init\_\_.py: imports the correct system specific code.  i.e. 'import support' to load the correct version of the functions for your system
 	* versionX.py: implementations for version X of python.
 	* osY.py: implementations for operating system Y.  e.g. oslinux.py, oswin.py etc.
 * test: package full of random code used for R&D.  
@@ -115,10 +116,10 @@ perform each of these functions
 	* param: config, module specific configuration (per instance)
 	* return: the Module instance
 * A set of class level constants describing the API's this module implements, set True each supported api
-	* __CAPTURE_FRAME__ = False
-    * __PROCESS_FRAME__ = False
-    * __CAPTURE_GROUP__ = False
-    * __PROCESS_GROUP__ = False
+	* \_\_CAPTURE_FRAME\_\_ = False
+	* \_\_PROCESS_FRAME\_\_ = False
+	* \_\_CAPTURE_GROUP\_\_ = False
+	* \_\_PROCESS_GROUP\_\_ = False
 
 ####CaptureFrame
 * 

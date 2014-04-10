@@ -2,15 +2,27 @@
 layout: page
 title: Roadmap - SportsReview
 rooturl: ../
+keywords: SportsReview, roadmap, features, upcoming
 ---
 
 [Home](../) > [Design notes](./) > Roadmap
+
+<div class="toc"><ul>
+<li><a href="#roadmap">Roadmap</a><ul>
+    <li><a href="#v02">v0.2</a></li>
+    <li><a href="#v10">v1.0</a></li>
+</ul></li>
+<li><a href="#complete-versions">Complete versions</a><ul>
+    <li><a href="#v01">v0.1</a></li>
+</ul></li>
+</ul></div>
 
 # Roadmap
 The roadmap details current feature plans for next and following releases of SportsReview. 
 	
 ## v0.2
 Probable inclusions for v0.2; some may be moved to v0.3
+
 * Delay video tool
 	* Add module API
 	* Move webcam capture to module

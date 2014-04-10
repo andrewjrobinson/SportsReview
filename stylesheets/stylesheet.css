@@ -483,6 +483,12 @@ strong, b {
 	font-weight: bold;
 }
 
+div.toc {border: 1px solid lightgrey; background-color: #F2F8FC;}
+div.toc ul {margin-bottom: 0;}
+div.toc ul li {list-style-type: none;font-size: 0.9em;}
+div.toc ul ul li {font-size: 0.8em;}
+div.toc ul ul ul li {font-size: 0.7em;}
+
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
 @media only screen and (min-width: 480px) and (max-width: 767px) {}
 
