@@ -10,6 +10,7 @@ keywords: SportsReview, roadmap, features, upcoming
 <div class="toc"><ul>
 <li><a href="#roadmap">Roadmap</a><ul>
     <li><a href="#v02">v0.2</a></li>
+    <li><a href="#v03">v0.3</a></li>
     <li><a href="#v10">v1.0</a></li>
 </ul></li>
 <li><a href="#complete-versions">Complete versions</a><ul>
@@ -23,21 +24,32 @@ The roadmap details current feature plans for next and following releases of Spo
 ## v0.2
 Probable inclusions for v0.2; some may be moved to v0.3
 
-* Delay video tool
-	* Add module API
-	* Move webcam capture to module
-	* Move frame buffer to module
-	* Move write buffer to module
-	* Support multiple capture devices
+* Delay analysis tool
+	* Add module API [3/4 Done]
+	* Move webcam capture to module [Done]
+	* Move frame buffer to module [Done]
+	* Move write buffer to module [Done]
+	* Support multiple capture devices [Done]
+	* Screen layout configuration (settings file) [Done]
 	* Improved on-screen overlay (implement multiple groups, scaled font size)
-* Analysis tool: (new)
+* After touches tool: (new)
 	* Load saved buffer
 	* Replay and various speeds
 	* Replay frame-by-frame
 	* Clip ends of buffer
 	* Split buffer
 	* Merge multiple buffers
-	* Export to video formats
+	* Export to video formats (single cam and multi-layout)
+
+## v0.3
+Probable inclusions for v0.3
+
+* Delay analysis tool:
+	* add core function to switch layouts (inc, dec and jumpto)
+	* AVI (and other) video format exporters
+	* size hinting to capture devices (from renderwidget size)
+* After touches tool:
+	* allow user to resize each renderwidget on layout
 
 ## v1.0
 Minimum requirements for version 1.0
@@ -61,7 +73,11 @@ Minimum requirements for version 1.0
 
 ### v1.0 maybe's
 Some other ideas that may make it into version 1.0
-* 
+
+* Support either PySide (default) or PyQt
+* Support client/server: allows users to connect to a support server and get help
+	* IM chat
+	* send files to server (user send or supporter request)
 
 # Complete versions
 Versions that have been completed
