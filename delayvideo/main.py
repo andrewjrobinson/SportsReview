@@ -34,6 +34,7 @@ from PyQt4.QtCore import pyqtSlot
 
 import common.modulemanager
 import common.frameset
+import common.framegroup
 # import delayvideo.video.video
 import delayvideo.video.framebuffer
 import settings.settingsmanager
@@ -84,26 +85,23 @@ class DelayVideoApplication(QtCore.QObject):
             layout = self.settings.getSetting('layouts')[sellayout]
         except:
             layout = self.settings.getSetting('layouts')[0]
-#         self.overlay.addMessage("Layout: %s"%layout['name'], group='layout')
+        self.overlay.addMessage("Layout: %s"%layout['name'], group='layout')
         
         # construct capture objects
         self._captureframes = []
         for cap in layout['captureframe']:
             self._captureframes.append(common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(self.settings, cap[1]))
         
-        # frame buffer
+        # frame processors (delay and buffering)
         self._processframes = []
         for cap in layout['processframe']:
             self._processframes.append(common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
-            
-#         self.video = delayvideo.video.video.Video(cv2.VideoCapture(0))
-#         self.framebuffer = delayvideo.video.framebuffer.FrameBuffer(self.settings)    # place to store frames while running
         self.pausedbuffer = None            # place to store frames while paused
         
         # frame capture timer
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self.frame)
-        self._timer.start(27)
+        self._timer.start(27) #Todo: make this a setting
         
         # save settings timer
         self._savetimer = QtCore.QTimer(self)
@@ -176,7 +174,7 @@ class DelayVideoApplication(QtCore.QObject):
         if self.paused and self.pausedbuffer:
             frame = self.pausedbuffer.next()
             if frame:
-                self.mainwindow.updateView(0, frame)
+                self.mainwindow.updateView(0, frame[0].asQPixmap())
                 self.updateFrameId()
     
     @pyqtSlot()
@@ -184,7 +182,7 @@ class DelayVideoApplication(QtCore.QObject):
         if self.paused and self.pausedbuffer:
             frame = self.pausedbuffer.prev()
             if frame:
-                self.mainwindow.updateView(0, frame)
+                self.mainwindow.updateView(0, frame[0].asQPixmap())
                 self.updateFrameId()
     
     @pyqtSlot()
@@ -197,8 +195,14 @@ class DelayVideoApplication(QtCore.QObject):
     @pyqtSlot()
     def pause(self):
         self.paused = True
-        self.pausedbuffer = self.framebuffer.cloneFrames()
-        self.mainwindow.updateView(0, self.pausedbuffer.current())
+        
+        # copy frames
+        self.pausedbuffer = common.framegroup.FrameGroup()
+        for proc in self._processframes:
+            proc.giveFrames(self.pausedbuffer)
+            
+        # update UI
+        self.mainwindow.updateView(0, self.pausedbuffer.current()[0].asQPixmap())
         self.updateFrameId()
     
     @pyqtSlot()
@@ -214,7 +218,7 @@ class DelayVideoApplication(QtCore.QObject):
 
     def updateFrameId(self):
         if self.pausedbuffer and self.paused:
-            self.mainwindow.setFrameId("%s/%s" % (self.pausedbuffer._frameidx + 1, len(self.pausedbuffer._frames)))
+            self.mainwindow.setFrameId("%s/%s" % (self.pausedbuffer.index() + 1, len(self.pausedbuffer)))
         else:
             self.mainwindow.setFrameId("~")
 

@@ -41,6 +41,10 @@ class FrameGroup(object):
         if timestamp is None:
             timestamp = time.time()
         self.timestamp = timestamp
+        self._current = 0
+        self._currentset = False
+        
+        self._addcount = 0
         
     def addFrame(self, frame):
         '''
@@ -50,14 +54,86 @@ class FrameGroup(object):
         '''
         #TODO: sanity check frame
         self._frames.append(frame)
+        self._addcount += 1
         
-    def addFrames(self, framelist):
+    def addFrames(self, framelist, front=False, current=None):
         '''
-        Add multiple frames at once
+        Add multiple frames at once.
+        
+        Note: current can be outside framelist's frames; it is just cliped the the range 
+        of resulting framegroup.  i.e. it is the index relative to the start of framelist
+        so can be +ve or -ve
         
         @param framelist: a list-like object containing the frames to add
+        @param front: boolean, add frames to start of group rather then end
+        @param current: int, update the current index to point to the specified frame within framelist
         '''
+        if front:
+            newframes = []
+            newframes.extend(framelist)
+            newframes.extend(self._frames)
+            self._frames = newframes
+            if current != None:
+                self._current = current
+                self._currentset = True
+            elif self._currentset == True:
+                self._current += len(framelist)
+        else:
+            if current != None:
+                self._current = len(self._frames) + current
+                self._currentset = True
+            self._frames.extend(framelist)
+            self._fixindex()
+            
+    def _fixindex(self):
+        '''fixes the index'''
+        if self._current < 0:
+            self._current = 0
+        elif self._current >= len(self._frames):
+            self._current = max(0,len(self._frames)-1)
         
-        self._frames.extend(framelist)
+    def current(self):
+        '''
+        Retrieves the current frame
         
+        @return: FrameSet, the current frameset
+        '''
+        try:
+            return self._frames[self._current]
+        except:
+            return None
+        
+    def next(self):
+        '''
+        Moves to next frame (and returns the new frame)
+        
+        @return: FrameSet, the frameset in the next position
+        '''
+        self._current += 1
+        if self._current >= len(self._frames):
+            self._current = len(self._frames) - 1
+        return self.current()
+        
+    def prev(self):
+        '''
+        Moves to previous frame (and returns the new frame)
+        
+        @return: FrameSet, the frameset in the previous position
+        '''
+        self._current -= 1
+        if self._current < 0:
+            self._current = 0
+        return self.current()
+        
+    def index(self):
+        '''
+        Get the current frame number
+        
+        @return: int, the id of the current frame
+        '''
+        return self._current
+    
+    def __len__(self, *args, **kwargs):
+        return len(self._frames)
+    
 #end class FrameGroup

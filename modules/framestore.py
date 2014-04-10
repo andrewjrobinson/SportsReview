@@ -63,16 +63,18 @@ class FrameStore(QObject):
         @return: frame, the frame that was provided
         '''
         
-#         # add newest frame
-#         self._frames.append(frame)
-#         
-#         # remove any old ones
-#         endtime = frame.timestamp - self._keepalive
-#         while len(self._frames) > 0:
-#             kframe = self._frames[0]
-#             if kframe.timestamp >= endtime:
-#                 break
-#             self._frames.pop(0)
+        if frame is not None:
+            
+            # add newest frame
+            self._frames.append(frame)
+         
+            # remove any old ones
+            endtime = frame.timestamp - self._keepalive
+            while len(self._frames) > 0:
+                kframe = self._frames[0]
+                if kframe.timestamp >= endtime:
+                    break
+                self._frames.pop(0)
         
         return frame
     
@@ -86,7 +88,8 @@ class FrameStore(QObject):
         @param framegroup: the framegroup object to store frames in.
         '''
         
-        framegroup.addFrames(self._frames)
+#         print "FrameStore: %s frames" % len(self._frames)
+        framegroup.addFrames(self._frames, front=True)
     
     @pyqtSlot(str,object)
     def settingChanged(self, name, value):

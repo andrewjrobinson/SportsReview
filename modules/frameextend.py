@@ -67,6 +67,8 @@ class FrameExtend(QObject):
             if frame.timestamp <= fg.endtime:
                 fg.addFrame(frame)
                 alivefgs.append(fg)
+#             else:
+#                 print "FrameExtend: %s frames" % fg._addcount
         self._framegroups = alivefgs
         
         return frame

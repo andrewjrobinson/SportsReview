@@ -85,7 +85,8 @@ class FrameDelay(QObject):
         @param framegroup: the framegroup object to store frames in.
         '''
         
-        framegroup.addFrames(self._frames)
+#         print "FrameDelay: %s frames" % len(self._frames)
+        framegroup.addFrames(self._frames, current=0)
     
     @pyqtSlot(str,object)
     def settingChanged(self, name, value):
