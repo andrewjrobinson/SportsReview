@@ -231,6 +231,15 @@ form {
 
 /* GENERAL ELEMENT TYPE STYLES */
 
+#main-content div.title {
+  font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
+  font-size: 3.2em;
+  letter-spacing: -1px;
+  color: #474747;
+  font-style: italic;
+	
+}
+
 #main-content h1 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 2.8em;
@@ -238,12 +247,12 @@ form {
   color: #474747;
 } 
 
-#main-content h1:before {
+/*#main-content h1:before {
   content: "/";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -0.9em;
-}
+}*/
 
 #main-content h2 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
@@ -252,12 +261,12 @@ form {
   margin-bottom: 8px;
   color: #474747;
 } 
-#main-content h2:before {
+/*#main-content h2:before {
   content: "//";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -1.5em;
-}
+}*/
 
 #main-content h3 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
@@ -268,12 +277,12 @@ form {
   color: #474747;
 } 
  
-#main-content h3:before {
+/*#main-content h3:before {
   content: "///";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -2em;
-}
+}*/
 
 #main-content h4 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
@@ -282,36 +291,36 @@ form {
   color: #474747;
 } 
 
-h4:before {
+/*h4:before {
   content: "////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -2.8em;
-}
+}*/
 
 #main-content h5 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: 14px;
   color: #474747;
 } 
-h5:before {
+/*h5:before {
   content: "/////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -3.2em;
-}
+}*/
 
 #main-content h6 {
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
   font-size: .8em;
   color: #474747;
 } 
-h6:before {
+/*h6:before {
   content: "//////";
   color: #9ddcff;
   padding-right: 0.3em;
   margin-left: -3.7em;
-}
+}*/
 
 p {
   margin-bottom: 20px;
@@ -483,7 +492,11 @@ strong, b {
 	font-weight: bold;
 }
 
-div.toc {border: 1px solid lightgrey; background-color: #F2F8FC;}
+em {
+	font-style: italic;
+}
+
+div.toc {border: 1px solid #DBE7F3; background-color: #F2F8FC;}
 div.toc ul {margin-bottom: 0;}
 div.toc ul li {list-style-type: none;font-size: 0.9em;}
 div.toc ul ul li {font-size: 0.8em;}

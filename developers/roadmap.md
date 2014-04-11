@@ -18,7 +18,8 @@ keywords: SportsReview, roadmap, features, upcoming
 </ul></li>
 </ul></div>
 
-# Roadmap
+<div class="title" id="roadmap">Roadmap</div>
+
 The roadmap details current feature plans for next and following releases of SportsReview. 
 	
 ## v0.2
@@ -79,7 +80,8 @@ Some other ideas that may make it into version 1.0
 	* IM chat
 	* send files to server (user send or supporter request)
 
-# Complete versions
+<div class="title" id="complete-versions">Complete versions</div>
+
 Versions that have been completed
 
 ## v0.1
