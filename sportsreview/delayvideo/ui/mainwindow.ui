@@ -34,9 +34,6 @@
        <property name="text">
         <string/>
        </property>
-       <property name="pixmap">
-        <pixmap resource="../../common/resources.qrc">:/common/resources/icon.svg</pixmap>
-       </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
