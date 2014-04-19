@@ -1,6 +1,6 @@
 ---
 layout: page
-title: User guide - SportsReview
+title: Installation guide - SportsReview
 rooturl: ../../
 keywords: SportsReview, user guide, help
 ---
@@ -48,6 +48,13 @@ SportsReview is fairly flexible in what it can run on.
 # Dependencies
 
 SportsReview makes use of a few external software programs that need to be installed before you can 
+start using it.  This section contains a quick overview of whats required to install the dependencies.
+
+Alternatively, you can use the following more details instructions:
+
+* [Linux]
+* [MacOS]
+* [Windows](python-win.html)
 
 ## Python
 
@@ -73,13 +80,15 @@ Like debian linux except using:
 ### MacOS
 
 Apparently Mac comes pre-installed with python.  If, however, the version is tool old please see this page 
-on how to install a newer version https://www.python.org/download/mac/
+on how to install a newer version [https://www.python.org/download/mac/](https://www.python.org/download/mac/)
 
 ### Windows
 
 Python needs to be installed on windows computers.  You can find a version to download on the from the 
 following page: https://www.python.org/download/releases/.  It is recommended that you uses a version 
 starting with 2.7 (currently 2.7.6) at this point as 3 versions have not been tested with SportsReview yet.
+
+[Detailed install](python-win.html) instructions.
 
 ## PyQt or PySide
 
