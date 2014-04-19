@@ -29,7 +29,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot, pyqtSignal
 from ui import Ui_MainWindow
 import time
-from delayvideo.ui.render import RenderWidget
+from sportsreview.delayvideo.ui.render import RenderWidget
 
 
 class MainWindow(QtGui.QMainWindow):

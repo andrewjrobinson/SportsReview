@@ -26,18 +26,18 @@ Created on 22/03/2014
 
 import sys
 import time
-import os
+# import os
 
-import cv2
+# import cv2
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
 
-import common.modulemanager
-import common.frameset
-import common.framegroup
+import sportsreview.common.modulemanager
+import sportsreview.common.frameset
+import sportsreview.common.framegroup
 # import delayvideo.video.video
-import delayvideo.video.framebuffer
-import settings.settingsmanager
+# import sportsreview.delayvideo.video.framebuffer
+import sportsreview.settings.settingsmanager
 import ui.mainwindow
 import ui.overlay
 
@@ -59,9 +59,9 @@ class DelayVideoApplication(QtCore.QObject):
         
         # load settings file
         if len(argv) == 2:
-            self.settings = settings.settingsmanager.SettingsManager(argv[1])
+            self.settings = sportsreview.settings.settingsmanager.SettingsManager(argv[1])
         else:
-            self.settings = settings.settingsmanager.SettingsManager()
+            self.settings = sportsreview.settings.settingsmanager.SettingsManager()
         
         # setup main window
         self.mainwindow = ui.mainwindow.MainWindow(self.settings, self)
@@ -91,12 +91,12 @@ class DelayVideoApplication(QtCore.QObject):
         # construct capture objects
         self._captureframes = []
         for cap in layout['captureframe']:
-            self._captureframes.append(common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(self.settings, cap[1]))
+            self._captureframes.append(sportsreview.common.modulemanager.ModuleManager.getCaptureFrameModule(cap[0]).getModule(self.settings, cap[1]))
         
         # frame processors (delay and buffering)
         self._processframes = []
         for cap in layout['processframe']:
-            self._processframes.append(common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
+            self._processframes.append(sportsreview.common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
         self.pausedbuffer = None            # place to store frames while paused
         
         self._processgrouprandom = {}
@@ -126,7 +126,7 @@ class DelayVideoApplication(QtCore.QObject):
         '''Called to capture next frame (and cause a previous one to display)'''
           
         # capture and store frame from each capture device
-        frameset = common.frameset.FrameSet(time.time())
+        frameset = sportsreview.common.frameset.FrameSet(time.time())
         for cap in self._captureframes:
             frameset.addFrame(cap.getFrame())
         
@@ -200,7 +200,7 @@ class DelayVideoApplication(QtCore.QObject):
         self.paused = True
         
         # copy frames
-        self.pausedbuffer = common.framegroup.FrameGroup()
+        self.pausedbuffer = sportsreview.common.framegroup.FrameGroup()
         for proc in self._processframes:
             proc.giveFrames(self.pausedbuffer)
             
@@ -222,7 +222,7 @@ class DelayVideoApplication(QtCore.QObject):
             if modulename in self._processframerandom:
                 module = self._processframerandom[modulename]
             else:
-                module = common.modulemanager.ModuleManager.getProcessFrameModule(modulename).getModule(self.settings, config)
+                module = sportsreview.common.modulemanager.ModuleManager.getProcessFrameModule(modulename).getModule(self.settings, config)
                 self._processframerandom[modulename] = module
             
             module.process(self.pausedbuffer.current())
@@ -235,7 +235,7 @@ class DelayVideoApplication(QtCore.QObject):
             if modulename in self._processgrouprandom:
                 module = self._processgrouprandom[modulename]
             else:
-                module = common.modulemanager.ModuleManager.getProcessGroupModule(modulename).getModule(self.settings, config)
+                module = sportsreview.common.modulemanager.ModuleManager.getProcessGroupModule(modulename).getModule(self.settings, config)
                 self._processgrouprandom[modulename] = module
                 
             module.processGroup(self.pausedbuffer)

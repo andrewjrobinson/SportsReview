@@ -23,7 +23,7 @@ Created on 08/04/2014
 '''
 import inspect
 
-import modules
+import sportsreview.modules
 
 class ModuleManager(object):
     '''lists available module classes for type'''
@@ -36,7 +36,7 @@ class ModuleManager(object):
         '''Gets a list of all capture frame modules (class)'''
         if refresh or cls._captureframemodules is None:
             cls._captureframemodules = {}
-            pymods = [modules.__dict__.get(a) for a in dir(modules)  if inspect.ismodule(modules.__dict__.get(a))]
+            pymods = [sportsreview.modules.__dict__.get(a) for a in dir(sportsreview.modules)  if inspect.ismodule(sportsreview.modules.__dict__.get(a))]
             for pymod in pymods:
                 for name in dir(pymod):
                     obj = getattr(pymod, name, None)
@@ -60,7 +60,7 @@ class ModuleManager(object):
         '''Gets a list of all Process frame modules (class)'''
         if refresh or cls._processframemodules is None:
             cls._processframemodules = {}
-            pymods = [modules.__dict__.get(a) for a in dir(modules)  if inspect.ismodule(modules.__dict__.get(a))]
+            pymods = [sportsreview.modules.__dict__.get(a) for a in dir(sportsreview.modules)  if inspect.ismodule(sportsreview.modules.__dict__.get(a))]
             for pymod in pymods:
                 for name in dir(pymod):
                     obj = getattr(pymod, name, None)
@@ -84,7 +84,7 @@ class ModuleManager(object):
         '''Gets a list of all Process group modules (class)'''
         if refresh or cls._processgroupmodules is None:
             cls._processgroupmodules = {}
-            pymods = [modules.__dict__.get(a) for a in dir(modules)  if inspect.ismodule(modules.__dict__.get(a))]
+            pymods = [sportsreview.modules.__dict__.get(a) for a in dir(sportsreview.modules)  if inspect.ismodule(sportsreview.modules.__dict__.get(a))]
             for pymod in pymods:
                 for name in dir(pymod):
                     obj = getattr(pymod, name, None)

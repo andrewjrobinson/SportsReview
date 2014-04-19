@@ -30,7 +30,7 @@ import os
 
 from PyQt4.QtCore import pyqtSignal, QObject
 
-import support
+import sportsreview.support
 
 class SettingsManager(QObject):
     '''Loads, updates and writes settings from/to disk'''
@@ -45,7 +45,7 @@ class SettingsManager(QObject):
         else:
             self._settingsfilename = "%s/settings.py" % os.path.dirname(__file__)
         
-        settingsmodule = support.loadModule('delayvideo.settings', self._settingsfilename)
+        settingsmodule = sportsreview.support.loadModule('delayvideo.settings', self._settingsfilename)
         
         self._settings = settingsmodule.settings
         self._docstring = settingsmodule.__doc__
