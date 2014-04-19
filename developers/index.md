@@ -43,6 +43,7 @@ Three directories will exist to contain modules; 2 in the installation directory
 (admin disableable) user override directory (in each users home/settings).
 
 Modules can implement one or more of the following interfaces:
+
 * CaptureFrame: capture details from a hardware device such as video cam, on-bat accelerometers
 * ProcessFrame: process a single frame and optionally produce an overlay or text output
 * CaptureGroup: capture a group of details from a filesource or capture on video device
@@ -71,7 +72,8 @@ during install the system will backup the current installation (and keep a numbe
 
 ## Dependencies
 * Python 2.x or 3.x [Only tested on 2.7]
-* PyQt or PySide: [PySide not yet supported]
+* PySide (or PyQt): defaults to PySide, user can add PyQt support by un-commenting a small section of code
+in sportsreview/support/qtlib/\_\_init\_\_.py
 * pyCV: (OpenCV)
 * git: for software updates [not yet]
 
@@ -105,6 +107,34 @@ Branches:
 * test: package full of random code used for R&D.  
 	* TODO: remove this and replace with unittests
 * env.py: global overrides for settings and disabling software updates
+
+## Version numbering
+Sports review uses the ''Semantic Versioning'' standard for version numbers (http://semver.org/)[http://semver.org/]
+i.e. [Major].[Minor].[Patch] using all digits
+
+### Bumping version
+When the version number is bumped check to make sure it is updated in the following places
+
+* \[code\]: sportsreview/\_\_init\_\_.py
+* \[docs\]: index.md, in heading, urls, and json metadata
+* \[docs\]: downloads/index.md, in heading and urls
+* \[docs\]: \_includes/side.html, in urls (x4) and button labels (x2)
+* \[docs\]: developers/roadmap.md, section needs moving
+
+## Coding style
+Some notes on coding style
+
+* Import only package/module level objects (i.e. not classes)
+* Use _import some.deep.package_ instead of _from some.deep import package_ (qtlib loader excempt)
+* Sort imports alpha/numerically
+* Group imports by (i.e. one line gap):
+	* System
+	* qtlib loader
+	* global sportsreview: full package path (from sportsreview)
+	* local sportsreview: in same package
+* No extra brackets on if/while/for statements
+
+...
 
 ## APIs
 The modules can have a number of different functions, this section describes that a module must implement to
