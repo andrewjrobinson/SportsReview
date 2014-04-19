@@ -23,7 +23,7 @@ Loads qt libraries in a standard interface
 
 import sys
 
-from pyqtnone import *
+# from pyqtnone import *
 from pyqtnone import __implementation__, __version__
 
 ## import PySide code ##

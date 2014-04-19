@@ -35,7 +35,7 @@ class MainWindow(QtGui.QMainWindow):
         Listens to the following settings:
         - delay: 
         '''
-        QtGui.QWidget.__init__(self)
+        QtGui.QMainWindow.__init__(self)
         self.ui = aftertouches.Ui_MainWindow()
         self.ui.setupUi(self)
         
