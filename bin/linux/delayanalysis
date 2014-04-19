@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# get the directory of this file and go up 2 directories (should be directory 
+# containing sportsreview package)
+SRDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
+
+# run tool
+export PYTHONPATH="$SRDIR:$PYTHONPATH"
+python $SRDIR/sportsreview/delayvideo/main.py $0
