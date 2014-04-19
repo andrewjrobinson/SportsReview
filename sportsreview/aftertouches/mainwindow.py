@@ -22,4 +22,36 @@ Created on 19/04/2014
 @author: Andrew Robinson
 '''
 
-from sportsreview.common.resources_rc import *
+from PyQt4 import QtGui, QtCore
+from PyQt4.QtCore import pyqtSlot, pyqtSignal
+
+import aftertouches, about
+
+class MainWindow(QtGui.QMainWindow):
+    
+    def __init__(self, settings, application=None):
+        '''
+        UI Object that draws the main window.
+        
+        Listens to the following settings:
+        - delay: 
+        '''
+        QtGui.QWidget.__init__(self)
+        self.ui = aftertouches.Ui_MainWindow()
+        self.ui.setupUi(self)
+        
+        self.application = application
+        
+        self.aboutdlg = None
+        
+        self.ui.actionExit.triggered.connect(self.close)
+        self.ui.actionAbout.triggered.connect(self.showAbout)
+    
+    @pyqtSlot()
+    def showAbout(self):
+        '''Slot to show the about dialog for the user'''
+        if self.aboutdlg is None:
+            self.aboutdlg = about.AboutDialog()
+        self.aboutdlg.show()
+    
+# end class MainWindow

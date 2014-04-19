@@ -17,9 +17,22 @@
 #  *  along with SportsReview.  If not, see <http://www.gnu.org/licenses/>.      *
 #  *                                                                             *
 #  *******************************************************************************/
+
 '''
 Created on 19/04/2014
 @author: Andrew Robinson
 '''
 
-from sportsreview.common.resources_rc import *
+from PyQt4 import QtGui
+
+import about_ui
+
+class AboutDialog(QtGui.QWidget):
+    def __init__(self):
+        QtGui.QWidget.__init__(self)
+        
+        self.ui = about_ui.Ui_Dialog()
+        self.ui.setupUi(self)
+        self.ui.buttonBox.rejected.connect(self.close)
+
+    

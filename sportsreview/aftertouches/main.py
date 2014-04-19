@@ -18,8 +18,52 @@
 #  *                                                                             *
 #  *******************************************************************************/
 '''
-Created on 19/04/2014
+Created on 18/04/2014
 @author: Andrew Robinson
 '''
+import sys
 
-from sportsreview.common.resources_rc import *
+from PyQt4 import QtGui, QtCore
+# from PyQt4.QtCore import pyqtSlot
+
+import sportsreview.settings.settingsmanager
+import mainwindow
+
+
+class AfterTouchesApplication(QtCore.QObject):
+    '''Performs the main logic/connections in the application'''
+    
+    def __init__(self, argv = [], parent=None):
+        '''Performs the main logic/connections in the application'''
+        
+        QtCore.QObject.__init__(self, parent)
+        
+        # load settings file
+        if len(argv) == 2:
+            self.settings = sportsreview.settings.settingsmanager.SettingsManager(argv[1])
+        else:
+            self.settings = sportsreview.settings.settingsmanager.SettingsManager()
+        
+        # setup main window
+        self.mainwindow = mainwindow.MainWindow(self.settings, self)
+        self.mainwindow.show()
+        
+    def cleanup(self):
+        '''Called just before closing application'''
+        # save the settings (only if changed)
+        if self.settings:
+            self.settings.writeSettings()
+# end class
+
+def main(argv):
+    
+    args = argv[1:]
+    args.insert(0, "After Touches")
+    app = QtGui.QApplication(args)
+    runtime = AfterTouchesApplication()
+    rc = app.exec_()
+    runtime.cleanup()
+    sys.exit(rc)
+ 
+if __name__ == '__main__':
+    main(sys.argv)
