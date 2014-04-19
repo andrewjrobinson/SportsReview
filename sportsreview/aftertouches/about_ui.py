@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'aftertouches/about.ui'
 #
-# Created: Sat Apr 19 19:38:02 2014
+# Created: Sat Apr 19 21:32:18 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!

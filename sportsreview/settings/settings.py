@@ -86,7 +86,7 @@ settings = {
 			('core', 'play'),
 		],
 	},
-	'selectedlayout': 0,
+	'selectedlayout': 1,
 	'layouts': [
 		{
 			'captureframe': [
@@ -133,5 +133,11 @@ settings = {
 			],
 		},
 	],
+	'aftertouchesui': {
+		'geometry': (1, 39, 800, 600),
+		'mode': 'normal',
+		'savegeometry': True,
+		'savemode': True,
+	},
 }
-__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding', 'selectedlayout', 'layouts']
+__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding', 'selectedlayout', 'layouts', 'aftertouchesui']

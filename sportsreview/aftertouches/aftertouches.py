@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'aftertouches/aftertouches.ui'
 #
-# Created: Sat Apr 19 19:39:40 2014
+# Created: Sat Apr 19 21:32:05 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -96,14 +96,15 @@ class Ui_MainWindow(object):
         self.menuHelp = QtGui.QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
         MainWindow.setMenuBar(self.menubar)
+        self.statusBar = QtGui.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
         self.actionOpen = QtGui.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
         self.actionExit = QtGui.QAction(MainWindow)
         self.actionExit.setObjectName("actionExit")
         self.actionAbout = QtGui.QAction(MainWindow)
         self.actionAbout.setObjectName("actionAbout")
-        self.actionAbout_SportsReview = QtGui.QAction(MainWindow)
-        self.actionAbout_SportsReview.setObjectName("actionAbout_SportsReview")
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -129,6 +130,5 @@ class Ui_MainWindow(object):
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionAbout_SportsReview.setText(QtGui.QApplication.translate("MainWindow", "About SportsReview", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc

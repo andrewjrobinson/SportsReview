@@ -23,7 +23,7 @@ Created on 18/04/2014
 '''
 import sys
 
-from sportsreview.support.qtlib import QtCore, QtGui
+from sportsreview.support.qtlib import QtCore, QtGui, Slot
 
 import sportsreview.settings.settingsmanager
 import mainwindow
@@ -45,6 +45,11 @@ class AfterTouchesApplication(QtCore.QObject):
         
         # setup main window
         self.mainwindow = mainwindow.MainWindow(self.settings, self)
+        
+        # connect signals
+        self.mainwindow.openfile.connect(self.openfile)
+        
+        # show main window
         self.mainwindow.show()
         
     def cleanup(self):
@@ -52,6 +57,13 @@ class AfterTouchesApplication(QtCore.QObject):
         # save the settings (only if changed)
         if self.settings:
             self.settings.writeSettings()
+            
+    @Slot(str)
+    def openfile(self, filename):
+        '''Open the given file'''
+        print "Opening: %s" % (filename, )
+        
+        
 # end class
 
 def main(argv):
