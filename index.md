@@ -6,7 +6,22 @@ keywords: SportsReview, video, analysis, video analysis, cricket, baseball, cycl
 
 Home
 
-<div class="title">SportsReview</div>
+<div itemprop="name" class="title">SportsReview</div>
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "SoftwareApplication",
+  "name" : "SportsReview",
+  "author" : {
+    "@type" : "Person",
+    "name" : "Andrew Robinson"
+  },
+  "datePublished" : "2014-04-07",
+  "downloadUrl" : [ "https://github.com/andrewjrobinson/SportsReview/archive/v0.1.tar.gz", "https://github.com/andrewjrobinson/SportsReview/archive/v0.1.zip" ],
+  "softwareVersion" : "v0.1"
+}
+</script>
 
 An open-source sports training analysis tool for sports that require precise movements, swings, or timings.
 
@@ -19,11 +34,11 @@ Useful for:
 * Soccer
 * and many more
 
-# Status
+# Releases
 SportsReview is currently under heavy development however it already contains many quite useful
 features.
 
-* **v0.1**: &#91;2014-04-07&#93; initial development release.  This is not yet a complete release but it already has quite a 
+* **Sports Review v0.1**: &#91;2014-04-07&#93; initial development release.  This is not yet a complete release but it already has quite a 
 range of useful features.  Download as [&#91;.tar.gz&#93;](https://github.com/andrewjrobinson/SportsReview/archive/v0.1.tar.gz) 
 or as [&#91;.zip&#93;](https://github.com/andrewjrobinson/SportsReview/archive/v0.1.zip)
 
