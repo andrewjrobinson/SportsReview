@@ -23,8 +23,7 @@ Created on 18/04/2014
 '''
 import sys
 
-from PyQt4 import QtGui, QtCore
-# from PyQt4.QtCore import pyqtSlot
+from sportsreview.support.qtlib import QtCore, QtGui
 
 import sportsreview.settings.settingsmanager
 import mainwindow

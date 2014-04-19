@@ -27,8 +27,7 @@ Created on 26/03/2014
 
 import time
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import pyqtSlot
+from sportsreview.support.qtlib import QtCore, QtGui, Slot
 
 class OverlayWidget(QtGui.QWidget):
     '''Draws messages over the video stream'''
@@ -111,7 +110,7 @@ class OverlayWidget(QtGui.QWidget):
         self._messages[group] = (time.time() + timeout, message)
         self.updateWidgetPosition()
         
-    @pyqtSlot()
+    @Slot()
     def clearTimeout(self):
         '''Clears the old messages'''
         now = time.time()
@@ -124,7 +123,7 @@ class OverlayWidget(QtGui.QWidget):
         if cleared:
             self.updateWidgetPosition()
         
-    @pyqtSlot()
+    @Slot()
     def parentResized(self):
         '''Slot to receive parent resize events'''
         if len(self._messages) > 0:

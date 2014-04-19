@@ -21,6 +21,7 @@
 Loads python version specific code
 '''
 
+# import python version specific code
 import sys
 if sys.version_info.major == 2:
     from version2 import *
@@ -28,3 +29,5 @@ elif sys.version_info.major == 3:
     from version3 import *
 else:
     raise Exception("Unsupported python version: %s" % sys.version)
+
+

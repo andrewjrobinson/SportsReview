@@ -28,17 +28,17 @@ Created on 26/03/2014
 
 import os
 
-from PyQt4.QtCore import pyqtSignal, QObject
+from sportsreview.support.qtlib import QtCore, Signal
 
 import sportsreview.support
 
-class SettingsManager(QObject):
+class SettingsManager(QtCore.QObject):
     '''Loads, updates and writes settings from/to disk'''
 
     def __init__(self, settingsfilename=None):
         '''Loads a specific settings file (or default one)'''
         
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         if settingsfilename is not None and os.path.exists(settingsfilename):
             self._settingsfilename = settingsfilename
@@ -60,7 +60,7 @@ class SettingsManager(QObject):
         
     # end __init__()
 
-    settingChanged = pyqtSignal(str, object) # name, value
+    settingChanged = Signal(str, object) # name, value
         
     def writeSettings(self, force=False):
         '''Write the settings back to the file (if needed)'''

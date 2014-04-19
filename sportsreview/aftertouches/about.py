@@ -23,7 +23,7 @@ Created on 19/04/2014
 @author: Andrew Robinson
 '''
 
-from PyQt4 import QtGui
+from sportsreview.support.qtlib import QtGui
 
 import about_ui
 

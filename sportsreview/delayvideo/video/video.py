@@ -27,7 +27,8 @@ Adapted from: http://wrdeoftheday.com/?page_id=2
 
 import cv2
 import numpy as np
-from PyQt4 import QtGui
+
+from sportsreview.support.qtlib import QtGui
  
 class Video():
     def __init__(self,capture):

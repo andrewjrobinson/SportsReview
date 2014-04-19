@@ -25,10 +25,9 @@ Created on 26/03/2014
 @author: arobinson
 '''
 
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import pyqtSlot, pyqtSignal
+from sportsreview.support.qtlib import QtCore, QtGui, Slot, Signal
+
 from ui import Ui_MainWindow
-import time
 from sportsreview.delayvideo.ui.render import RenderWidget
 
 
@@ -65,26 +64,26 @@ class MainWindow(QtGui.QMainWindow):
     # end __init__()
     
     # signals
-    incDelay = pyqtSignal()         #+>=. (while running)
-    decDelay = pyqtSignal()         #-<,  (while running)
-    incFrame = pyqtSignal()         #+>=. (while paused)
-    decFrame = pyqtSignal()         #-<,  (while paused)
-    help = pyqtSignal()             #F1
-    edit = pyqtSignal()             #F2
-    togglePlay = pyqtSignal()       #F7 <space>
-    recordBuffer = pyqtSignal()     #F12
+    incDelay = Signal()         #+>=. (while running)
+    decDelay = Signal()         #-<,  (while running)
+    incFrame = Signal()         #+>=. (while paused)
+    decFrame = Signal()         #-<,  (while paused)
+    help = Signal()             #F1
+    edit = Signal()             #F2
+    togglePlay = Signal()       #F7 <space>
+    recordBuffer = Signal()     #F12
     
     # signals (new)
-    processFrame = pyqtSignal(str, object)
-    processGroup = pyqtSignal(str, object)
-    resized = pyqtSignal()
+    processFrame = Signal(str, object)
+    processGroup = Signal(str, object)
+    resized = Signal()
     
     def resizeEvent(self, *args, **kwargs):
         returncode = QtGui.QMainWindow.resizeEvent(self, *args, **kwargs)
         self.resized.emit()
         return returncode
     
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "delay":
             self.ui.delay.setText(str(value))

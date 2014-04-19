@@ -22,10 +22,9 @@ Created on 09/04/2014
 @author: Andrew Robinson
 '''
 
+from sportsreview.support.qtlib import QtCore, Slot
 
-from PyQt4.QtCore import pyqtSlot, QObject
-
-class FrameExtend(QObject):
+class FrameExtend(QtCore.QObject):
     '''Extends a framebuffer for a given period'''
     
     __CAPTURE_FRAME__ = False
@@ -40,7 +39,7 @@ class FrameExtend(QObject):
         @param settings: global settings object (from settings file)
         @param config: the specific configuration for this instance (from layout)
         '''
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         self._settings = settings
         self._config = config
@@ -85,7 +84,7 @@ class FrameExtend(QObject):
         framegroup.endtime = framegroup.timestamp + self._extend
         self._framegroups.append(framegroup)
     
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "extend":
             self._extend = float(value)

@@ -23,7 +23,8 @@ Created on 08/04/2014
 '''
 
 import cv2
-from PyQt4 import QtGui
+
+from sportsreview.support.qtlib import QtGui
 
 class UsbCamCaptureCV(object):
     '''A module that captures frames from usb camera's (via OpenCV)'''

@@ -22,8 +22,7 @@ Created on 19/04/2014
 @author: Andrew Robinson
 '''
 
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import pyqtSlot, pyqtSignal
+from sportsreview.support.qtlib import QtGui, Slot
 
 import aftertouches, about
 
@@ -47,7 +46,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.showAbout)
     
-    @pyqtSlot()
+    @Slot()
     def showAbout(self):
         '''Slot to show the about dialog for the user'''
         if self.aboutdlg is None:

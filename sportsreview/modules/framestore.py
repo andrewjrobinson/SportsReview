@@ -22,10 +22,9 @@ Created on 09/04/2014
 @author: Andrew Robinson
 '''
 
+from sportsreview.support.qtlib import QtCore, Slot
 
-from PyQt4.QtCore import pyqtSlot, QObject
-
-class FrameStore(QObject):
+class FrameStore(QtCore.QObject):
     '''Keeps frames for a set timeperiod'''
     
     __CAPTURE_FRAME__ = False
@@ -40,7 +39,7 @@ class FrameStore(QObject):
         @param settings: global settings object (from settings file)
         @param config: the specific configuration for this instance (from layout)
         '''
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         self._settings = settings
         self._config = config
@@ -91,7 +90,7 @@ class FrameStore(QObject):
 #         print "FrameStore: %s frames" % len(self._frames)
         framegroup.addFrames(self._frames, front=True)
     
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "keepalive":
             self._keepalive = float(value)

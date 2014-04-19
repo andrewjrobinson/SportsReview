@@ -22,9 +22,9 @@ Created on 09/04/2014
 @author: Andrew Robinson
 '''
 
-from PyQt4.QtCore import pyqtSlot, QObject
+from sportsreview.support.qtlib import QtCore, Slot
 
-class FrameDelay(QObject):
+class FrameDelay(QtCore.QObject):
     '''Delays the frames being processed for a set timeperiod'''
     
     __CAPTURE_FRAME__ = False
@@ -39,7 +39,7 @@ class FrameDelay(QObject):
         @param settings: global settings object (from settings file)
         @param config: the specific configuration for this instance (from layout)
         '''
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         self._settings = settings
         self._config = config
@@ -88,7 +88,7 @@ class FrameDelay(QObject):
 #         print "FrameDelay: %s frames" % len(self._frames)
         framegroup.addFrames(self._frames, current=0)
     
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "delay":
             self._delay = float(value)

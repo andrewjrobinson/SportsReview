@@ -15,9 +15,10 @@ It defines classes_and_methods
 @contact:    andrewjrobinson@gmail.com
 '''
 import sys
-
 import cv2
-from PyQt4 import QtGui, QtCore, Qt
+
+from sportsreview.support.qtlib import QtCore, QtGui
+
 from ui import Ui_MainWindow
 from video import Video
  

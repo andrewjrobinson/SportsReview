@@ -25,9 +25,9 @@ Created on 10/04/2014
 import os
 import time
 
-from PyQt4.QtCore import pyqtSlot, QObject
+from sportsreview.support.qtlib import QtCore, Slot
 
-class RecordStillCV(QObject):
+class RecordStillCV(QtCore.QObject):
     '''Writes a frame group to file in the form of 1 jpg per frameset per image'''
     
     __CAPTURE_FRAME__ = False
@@ -42,7 +42,7 @@ class RecordStillCV(QObject):
         @param settings: global settings object (from settings file)
         @param config: the specific configuration for this instance (from layout)
         '''
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         self._settings = settings
         self._config = config
@@ -87,7 +87,7 @@ class RecordStillCV(QObject):
             
             
         
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "recorddirectory":
             self._recorddirectory = value

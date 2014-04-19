@@ -6,9 +6,9 @@ Created on 22/03/2014
 
 import cv2
 import numpy as np
-from PyQt4 import QtGui, QtCore, Qt
-from ui import Ui_MainWindow
- 
+
+from sportsreview.support.qtlib import QtGui
+
 class Video():
     def __init__(self,capture):
         self.capture = capture

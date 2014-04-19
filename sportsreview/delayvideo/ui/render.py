@@ -22,10 +22,7 @@ Created on 10/04/2014
 @author: Andrew Robinson
 '''
 
-import time
-
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import pyqtSlot
+from sportsreview.support.qtlib import QtCore, QtGui, Slot
 
 
 try:
@@ -164,7 +161,7 @@ class RenderWidget(QtGui.QLabel):
                 
                 self.setPixmap(pmn)
         
-    @pyqtSlot()
+    @Slot()
     def parentResized(self):
         '''Slot to receive parent resize events'''
         self.updateWidgetPosition()

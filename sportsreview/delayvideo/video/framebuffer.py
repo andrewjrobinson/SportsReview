@@ -25,10 +25,9 @@ Created on 22/03/2014
 import time
 import os
 
-from PyQt4.QtCore import QFile, pyqtSlot, QObject
-from PyQt4.QtGui import QPixmap
+from sportsreview.support.qtlib import QtCore, Slot
 
-class FrameBuffer(QObject):
+class FrameBuffer(QtCore.QObject):
     '''A buffer object to store frames (for a given timeperiod)'''
             
     def __init__(self, settings):
@@ -43,7 +42,7 @@ class FrameBuffer(QObject):
         @param settings: A settings manager instance which contains settings to use.
         '''
         
-        QObject.__init__(self)
+        QtCore.QObject.__init__(self)
         
         self.settings = settings
         self.settings.settingChanged.connect(self.settingChanged)
@@ -110,7 +109,7 @@ class FrameBuffer(QObject):
             return len(self._frames) / self._delay
         return 0
     
-    @pyqtSlot(str,object)
+    @Slot(str,object)
     def settingChanged(self, name, value):
         if name == "delay":
             self._delay = float(value)

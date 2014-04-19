@@ -17,7 +17,6 @@
 #  *  along with SportsReview.  If not, see <http://www.gnu.org/licenses/>.      *
 #  *                                                                             *
 #  *******************************************************************************/
-import traceback
 '''
 Created on 22/03/2014
 
@@ -26,17 +25,12 @@ Created on 22/03/2014
 
 import sys
 import time
-# import os
 
-# import cv2
-from PyQt4 import QtGui, QtCore
-from PyQt4.QtCore import pyqtSlot
+from sportsreview.support.qtlib import QtCore, QtGui, Slot
 
-import sportsreview.common.modulemanager
-import sportsreview.common.frameset
 import sportsreview.common.framegroup
-# import delayvideo.video.video
-# import sportsreview.delayvideo.video.framebuffer
+import sportsreview.common.frameset
+import sportsreview.common.modulemanager
 import sportsreview.settings.settingsmanager
 import ui.mainwindow
 import ui.overlay
@@ -145,7 +139,7 @@ class DelayVideoApplication(QtCore.QObject):
 #             self.mainwindow.setFrameRate("%.2f"%self.framebuffer.getFrameRate())
     
     
-    @pyqtSlot()
+    @Slot()
     def incDelay(self):
         '''
         Increases delay by 0.5 seconds
@@ -158,7 +152,7 @@ class DelayVideoApplication(QtCore.QObject):
             self.settings.setSetting("delay", delay)
             self.overlay.addMessage("Delay: %ss"%delay)
     
-    @pyqtSlot()
+    @Slot()
     def decDelay(self):
         '''
         Decreases delay by 0.5 seconds
@@ -172,7 +166,7 @@ class DelayVideoApplication(QtCore.QObject):
             self.settings.setSetting("delay", delay)
             self.overlay.addMessage("Delay: %ss"%delay)
     
-    @pyqtSlot()
+    @Slot()
     def incFrame(self):
         if self.paused and self.pausedbuffer:
             frameset = self.pausedbuffer.next()
@@ -180,7 +174,7 @@ class DelayVideoApplication(QtCore.QObject):
                 self.mainwindow.renderFrameset(frameset)
                 self.updateFrameId()
     
-    @pyqtSlot()
+    @Slot()
     def decFrame(self):
         if self.paused and self.pausedbuffer:
             frameset = self.pausedbuffer.prev()
@@ -188,14 +182,14 @@ class DelayVideoApplication(QtCore.QObject):
                 self.mainwindow.renderFrameset(frameset)
                 self.updateFrameId()
     
-    @pyqtSlot()
+    @Slot()
     def togglePlay(self):
         if self.paused:
             self.play()
         else:
             self.pause()
     
-    @pyqtSlot()
+    @Slot()
     def pause(self):
         self.paused = True
         
@@ -208,13 +202,13 @@ class DelayVideoApplication(QtCore.QObject):
         self.mainwindow.renderFrameset(self.pausedbuffer.current())
         self.updateFrameId()
     
-    @pyqtSlot()
+    @Slot()
     def play(self):
         self.paused = False
         self.pausedbuffer = None
         self.updateFrameId()
     
-    @pyqtSlot(str, object)
+    @Slot(str, object)
     def processFrame(self, modulename, config):
         ''''''
         if self.paused:
@@ -227,7 +221,7 @@ class DelayVideoApplication(QtCore.QObject):
             
             module.process(self.pausedbuffer.current())
         
-    @pyqtSlot(str, object)
+    @Slot(str, object)
     def processGroup(self, modulename, config):
         ''''''
         if self.paused:
