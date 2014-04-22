@@ -6,3 +6,4 @@ import framedelay
 import frameextend
 import framestore
 import recordstillcv
+import jpegstillarrayreader

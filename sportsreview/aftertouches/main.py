@@ -23,9 +23,11 @@ Created on 18/04/2014
 '''
 import sys
 
-from sportsreview.support.qtlib import QtCore, QtGui, Slot
+from sportsreview.support.qtlib import QtCore, QtGui, Slot, Signal
 
+import sportsreview.common.modulemanager
 import sportsreview.settings.settingsmanager
+
 import mainwindow
 
 
@@ -37,6 +39,8 @@ class AfterTouchesApplication(QtCore.QObject):
         
         QtCore.QObject.__init__(self, parent)
         
+        self._openFrameGroup = None
+        
         # load settings file
         if len(argv) == 2:
             self.settings = sportsreview.settings.settingsmanager.SettingsManager(argv[1])
@@ -47,23 +51,52 @@ class AfterTouchesApplication(QtCore.QObject):
         self.mainwindow = mainwindow.MainWindow(self.settings, self)
         
         # connect signals
-        self.mainwindow.openfile.connect(self.openfile)
+        self.mainwindow.openFile.connect(self.openFile)
         
         # show main window
         self.mainwindow.show()
-        
+    
     def cleanup(self):
         '''Called just before closing application'''
         # save the settings (only if changed)
         if self.settings:
             self.settings.writeSettings()
-            
+    
+    ## signals ##
+    openFrameGroup = Signal(object)
+    selectedFrameSet = Signal(object, int)
+    
+    ## slots ##
     @Slot(str)
-    def openfile(self, filename):
+    def openFile(self, filename):
         '''Open the given file'''
-        print "Opening: %s" % (filename, )
+        self.mainwindow.setStatusMsg("Opening: %s" % (filename, ))
+        reader = sportsreview.common.modulemanager.ModuleManager.getCaptureGroupModule("JpegStillArrayReader").getModule(self.settings, {})
+        fgroup = reader.load({"filename": filename})
+        self._openFrameGroup = fgroup
+        self.openFrameGroup.emit(fgroup)
+        self.mainwindow.setStatusMsg("Opened: %s" % (filename, ))
         
-        
+    @Slot()
+    def nextFrame(self):
+        '''Change to the next frame'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.next()
+            self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+    
+    @Slot()
+    def prevFrame(self):
+        '''Change to the previous frame'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.prev()
+            self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+    
+    @Slot(int)
+    def setFrame(self, idx):
+        '''Change to a specified frame'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.setPosition(idx)
+            self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
 # end class
 
 def main(argv):

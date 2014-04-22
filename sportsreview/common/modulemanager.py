@@ -29,7 +29,10 @@ class ModuleManager(object):
     '''lists available module classes for type'''
     _captureframemodules = None
     _processframemodules = None
+    _capturegroupmodules = None
     _processgroupmodules = None
+    
+    ################################
     
     @classmethod
     def getCaptureFrameModules(cls, refresh=True):
@@ -55,6 +58,8 @@ class ModuleManager(object):
         cls.getCaptureFrameModules(False)
         return cls._captureframemodules[str(name)]
     
+    ################################
+    
     @classmethod
     def getProcessFrameModules(cls, refresh=True):
         '''Gets a list of all Process frame modules (class)'''
@@ -79,6 +84,34 @@ class ModuleManager(object):
         cls.getProcessFrameModules(False)
         return cls._processframemodules[str(name)]
     
+    ################################
+    
+    @classmethod
+    def getCaptureGroupModules(cls, refresh=True):
+        '''Gets a list of all capture group modules (class)'''
+        if refresh or cls._capturegroupmodules is None:
+            cls._capturegroupmodules = {}
+            pymods = [sportsreview.modules.__dict__.get(a) for a in dir(sportsreview.modules)  if inspect.ismodule(sportsreview.modules.__dict__.get(a))]
+            for pymod in pymods:
+                for name in dir(pymod):
+                    obj = getattr(pymod, name, None)
+                    if inspect.isclass(obj):
+                        try:
+                            if obj.__CAPTURE_GROUP__ == True:
+                                cls._capturegroupmodules[str(name)] = obj
+                        except:
+                            pass
+        return cls._capturegroupmodules.values()
+
+    @classmethod
+    def getCaptureGroupModule(cls, name):
+        '''Gets a single of capture group module by name'''
+        
+        cls.getCaptureGroupModules(False)
+        return cls._capturegroupmodules[str(name)]
+    
+    ################################
+    
     @classmethod
     def getProcessGroupModules(cls, refresh=True):
         '''Gets a list of all Process group modules (class)'''
@@ -102,3 +135,5 @@ class ModuleManager(object):
         
         cls.getProcessGroupModules(False)
         return cls._processgroupmodules[str(name)]
+    
+    ################################

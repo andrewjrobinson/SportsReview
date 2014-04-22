@@ -39,3 +39,31 @@ class FrameSet(object):
         return self._frames[key]
     def __len__(self):
         return len(self._frames)
+
+
+class LazyFrameSet(object):
+    '''Stores all frames at a single timepoint'''
+    
+    def __init__(self, timestamp=None, loadframefunc=None, loadframeopts=None):
+        self.timestamp = timestamp
+        self._loadframefunc = loadframefunc
+        self._loadframeopts = loadframeopts
+        self._frames = []
+        self._framesloaded = []
+        
+    def addFrame(self, frame):
+        '''Adds a single frame to the frameset'''
+        self._frames.append(frame)
+        self._framesloaded.append(False)
+    
+    def __delitem__(self, key):
+        self._frames.__delattr__(key)
+        self._framesloaded.__delattr__(key)
+    def __getitem__(self, key):
+        if not self._framesloaded[key]:
+            self._frames[key] = self._loadframefunc(self, self._loadframeopts, self._frames[key])
+            self._framesloaded[key] = True
+        return self._frames[key]
+    def __len__(self):
+        return len(self._frames)
+    

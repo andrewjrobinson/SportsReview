@@ -17,27 +17,30 @@
 #  *  along with SportsReview.  If not, see <http://www.gnu.org/licenses/>.      *
 #  *                                                                             *
 #  *******************************************************************************/
+from sportsreview.common.frameset import LazyFrameSet
 '''
-Created on 10/04/2014
+Created on 22/04/2014
 @author: Andrew Robinson
+
+A companion reader to 'recordstillcv' module.  Used by AfterTouches to read a 
+previously recorded FrameGroup 
 '''
 
-import os
-import time
+from sportsreview.support.qtlib import QtCore, QtGui
 
-from sportsreview.support.qtlib import QtCore, Slot
+from sportsreview.common.framegroup import LazyFrameGroup
 
-class RecordStillCV(QtCore.QObject):
-    '''Writes a frame group to file in the form of 1 jpg per frameset per image'''
+class JpegStillArrayReader(QtCore.QObject):
+    '''Reads a frame group from file in the form of 1 jpeg per frameset per image'''
     
     __CAPTURE_FRAME__ = False
     __PROCESS_FRAME__ = False
-    __CAPTURE_GROUP__ = False
-    __PROCESS_GROUP__ = True
-    
+    __CAPTURE_GROUP__ = True
+    __PROCESS_GROUP__ = False
+
     def __init__(self, settings, config):
         '''
-        Writes a frame group to file in the form of 1 jpg per frameset per image
+        Reads a frame group from file in the form of 1 jpeg per frameset per image
         
         @param settings: global settings object (from settings file)
         @param config: the specific configuration for this instance (from layout)
@@ -46,50 +49,44 @@ class RecordStillCV(QtCore.QObject):
         
         self._settings = settings
         self._config = config
-        
-        self._settings.settingChanged.connect(self.settingChanged)
-        self._recorddirectory = settings.getSetting("recorddirectory")
-    
+
     @classmethod
     def getModule(cls, settings, config):
         '''Returns an instance of this module for the provided settings'''
         return cls(settings, config)
     
-    def processGroup(self, framegroup):
+    def load(self, options):
         '''
-        Writes the frames within the frame to disk as jpg images along with a summary text file
+        Loads a file.
         
-        @param framegroup: the incoming frame object
+        @param options: dictionary, expects key 'filename'
+        @return: FrameGroup like object
         '''
+        def lazysetloader(sself, _, framefilename):
+#             print "Loading: %s" % framefilename
+            pmap = QtGui.QPixmap(framefilename)
+            return pmap
+        def lazygrouploader(gself, timingfilename):
+            f = open(timingfilename)
+            result = []
+            for line in f:
+                cols = line.strip().split('\t')
+                
+                # get the frameset (or create new one)
+                try:
+                    fset = result[int(cols[0])]
+                except IndexError:
+                    result.append(LazyFrameSet(timestamp=cols[1], loadframefunc=lazysetloader))
+                    fset = result[int(cols[0])]
+                
+                # add the frame file to it
+                fset.addFrame(cols[3]) #TODO: make frameset support stream id's (so we can handle missing frames)
+            return result
         
-        if framegroup is not None:
-            
-            # calculate how many digits will be required
-            digits = len(str(len(framegroup)))
-            
-            # make the output dir if needed
-            outdir = "%s%svideo_%s" % (self._recorddirectory, os.path.sep, time.strftime("%Y-%m-%d_%H-%M-%S"), )
-            if not os.path.exists(outdir):
-                os.mkdir(outdir)
-            
-            idx = 1
-            timingFile = open("%s%stiming.txt" % (outdir, os.path.sep), 'w')
-            for frameset in framegroup:
-                i = 0
-                for frame in frameset:
-                    filename = "%s%sframe-d%s-%s.jpg" % (outdir, os.path.sep, i, str(idx).zfill(digits))
-                    timingFile.write("%s\t%s\t%s\t%s\n" % (idx-1, frameset.timestamp, i, filename,))
-                    frame.asQPixmap().save(filename)
-                    i+=1
-                idx+=1
-            
-            timingFile.close()
-            
-            
-        
-    @Slot(str,object)
-    def settingChanged(self, name, value):
-        if name == "recorddirectory":
-            self._recorddirectory = value
-        
-# end class RecordStillCV
+        return LazyFrameGroup(None, lazygrouploader, options['filename'])
+
+
+  
+#end class JpegStillArrayReader
+    
+    

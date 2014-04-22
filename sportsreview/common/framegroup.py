@@ -124,6 +124,14 @@ class FrameGroup(object):
         if self._current < 0:
             self._current = 0
         return self.current()
+    
+    def setPosition(self, idx):
+        '''
+        Moves to the specified index.
+        @param idx: int, the index to set the 'current' to
+        '''
+        self._current = idx
+        self._fixindex()
         
     def index(self):
         '''
@@ -140,3 +148,102 @@ class FrameGroup(object):
         return self._frames[k]
     
 #end class FrameGroup
+
+class LazyFrameGroup(object):
+    '''
+    Stores frames like a FrameGroup except the data is only loaded on need
+    '''
+    
+    def __init__(self, timestamp=None, loadframelistfunc=None, loadframelistopts=None ):
+        '''
+        Stores frames like a FrameGroup except the data is only loaded on need
+        
+        loadframelistfunc params: func passed must have following params
+        - self: LazyFrameGroup, the object that this frame is a part of.
+        - opts: object, the value passed in constructor (loadframelistopts)
+        
+        @param timestamp: double, the time when this framegroup was created
+        @param loadframelistfunc: callable, called when the framegroup needs to first know how many frames exist
+        @param loadframelistopts: object, a value passed to func when called
+        '''
+        
+        self._frames = None
+        if timestamp is None:
+            timestamp = time.time()
+        self.timestamp = timestamp
+        self._loadframelistfunc = loadframelistfunc
+        self._loadframelistopts = loadframelistopts
+        self._current = 0
+        self._currentset = False
+        
+    def current(self):
+        '''
+        Retrieves the current frame
+        
+        @return: FrameSet, the current frameset
+        '''
+        self._loadframeinfo()
+        try:
+            return self._frames[self._current]
+        except:
+            return None
+        
+    def next(self):
+        '''
+        Moves to next frame (and returns the new frame)
+        
+        @return: FrameSet, the frameset in the next position
+        '''
+        self._current += 1
+        if self._current >= len(self._frames):
+            self._current = len(self._frames) - 1
+        return self.current()
+        
+    def prev(self):
+        '''
+        Moves to previous frame (and returns the new frame)
+        
+        @return: FrameSet, the frameset in the previous position
+        '''
+        self._current -= 1
+        if self._current < 0:
+            self._current = 0
+        return self.current()
+    
+    def setPosition(self, idx):
+        '''
+        Moves to the specified index.
+        @param idx: int, the index to set the 'current' to
+        '''
+        self._current = idx
+        self._fixindex()
+    
+    def index(self):
+        '''
+        Get the current frame number
+        
+        @return: int, the id of the current frame
+        '''
+        return self._current
+    
+    def __len__(self, *args, **kwargs):
+        self._loadframeinfo()
+        return len(self._frames)
+    
+    def __getitem__(self, k):
+        self._loadframeinfo()
+        return self._frames[k]
+    
+    ## support ##
+    def _fixindex(self):
+        '''fixes the index'''
+        if self._current < 0:
+            self._current = 0
+        elif self._current >= len(self._frames):
+            self._current = max(0,len(self._frames)-1)
+    
+    def _loadframeinfo(self):
+        if self._frames is None:
+            self._frames = self._loadframelistfunc(self, self._loadframelistopts)
+
+# end class LazyFrameGroup

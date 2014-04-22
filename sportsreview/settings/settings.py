@@ -86,7 +86,7 @@ settings = {
 			('core', 'play'),
 		],
 	},
-	'selectedlayout': 1,
+	'selectedlayout': 0,
 	'layouts': [
 		{
 			'captureframe': [
@@ -134,8 +134,8 @@ settings = {
 		},
 	],
 	'aftertouchesui': {
-		'geometry': (1, 39, 800, 600),
-		'mode': 'normal',
+		'geometry': (0, 39, 800, 600),
+		'mode': 'maximised',
 		'savegeometry': True,
 		'savemode': True,
 	},

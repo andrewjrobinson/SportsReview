@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'aftertouches/aftertouches.ui'
 #
-# Created: Sat Apr 19 21:32:05 2014
+# Created: Tue Apr 22 23:08:28 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,6 +83,7 @@ class Ui_MainWindow(object):
         self.previewLabel.setObjectName("previewLabel")
         self.verticalLayout_3.addWidget(self.previewLabel)
         self.frameSlider = QtGui.QSlider(self.frameSelectionFrame)
+        self.frameSlider.setMaximum(0)
         self.frameSlider.setOrientation(QtCore.Qt.Horizontal)
         self.frameSlider.setObjectName("frameSlider")
         self.verticalLayout_3.addWidget(self.frameSlider)

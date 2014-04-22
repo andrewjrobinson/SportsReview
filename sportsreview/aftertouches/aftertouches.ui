@@ -168,6 +168,9 @@
          <property name="toolTip">
           <string>Select Frame</string>
          </property>
+         <property name="maximum">
+          <number>0</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>

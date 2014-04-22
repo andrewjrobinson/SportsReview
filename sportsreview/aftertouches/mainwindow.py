@@ -50,13 +50,22 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.showAbout)
         self.ui.actionOpen.triggered.connect(self.openFileDialog)
+        self.ui.nextFrameButton.clicked.connect(self.application.nextFrame)
+        self.ui.prevFrameButton.clicked.connect(self.application.prevFrame)
+        self.application.openFrameGroup.connect(self.openFrameGroup)
+        self.application.selectedFrameSet.connect(self.selectedFrameSet)
+        self.ui.frameSlider.valueChanged.connect(self.application.setFrame)
+        self.incFrame.connect(self.application.nextFrame)
+        self.decFrame.connect(self.application.prevFrame)
         
         self._bindings = {}
         self._loadBindings(settings.getSetting('keybinding'))
     #end init()
     
     ## Signals ##
-    openfile = Signal(str)
+    openFile = Signal(str)
+    incFrame = Signal()
+    decFrame = Signal()
     
     ## Slots ##
     @Slot(str,object)
@@ -86,9 +95,47 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.statusBar.showMessage("Opening %s" % (filename[0],))
             
             # tell app to open the file
-            self.openfile.emit(filename[0])
+            self.openFile.emit(filename[0])
     
-    ## reimplemented
+    @Slot()
+    def openFrameGroup(self, fgroup):
+        '''Slot to know when the application opens a new framegroup'''
+        
+        frameCount = len(fgroup)
+        self.ui.frameSlider.setMaximum(frameCount -1)
+        
+        # render previews
+        f0 = fgroup[0][0]
+        previewW = self.ui.previewLabel.width()
+        previewH = self.ui.previewLabel.height()
+        previewPmap = QtGui.QPixmap(previewW, previewH)
+        previewPmap.fill()
+        
+        scaledW = f0.width() * previewH / f0.height()
+        printCount = int(previewW) / int(scaledW) # int division
+        freeSpace = float(previewW - (printCount * scaledW)) / (printCount - 1)
+        
+        painter = QtGui.QPainter(previewPmap)
+        for i in xrange(printCount):
+            fid = int(round(float(i * (frameCount-1)) / (printCount-1)))
+            x = int(round(i * (freeSpace + scaledW)))
+            frame = fgroup[fid][0].scaled(scaledW, previewH)
+            painter.drawPixmap(x,0,frame)
+            
+        
+        painter.end()
+        self.ui.previewLabel.setPixmap(previewPmap)
+        
+        # render the current frame
+        self.ui.frameLabel.setPixmap(fgroup.current()[0])
+    
+    @Slot(object, int)
+    def selectedFrameSet(self, fgroup, index):
+        '''Slot to know when the frame selection changes'''
+        self.ui.frameLabel.setPixmap(fgroup[index][0])
+        self.ui.frameSlider.setSliderPosition(index)
+    
+    ## reimplemented ##
     def showEvent(self, *args, **kwargs):
         if self._windowstate is None:
             self._windowstate = self.settings.getSetting("aftertouchesui")
@@ -160,8 +207,8 @@ class MainWindow(QtGui.QMainWindow):
 #                          'play': lambda a,b: self.togglePlay.emit(),
 #                          'incdelay': lambda a,b: self.incDelay.emit(),
 #                          'decdelay': lambda a,b: self.decDelay.emit(),
-#                          'incframe': lambda a,b: self.incFrame.emit(),
-#                          'decframe': lambda a,b: self.decFrame.emit(),
+                         'incframe': lambda a,b: self.incFrame.emit(),
+                         'decframe': lambda a,b: self.decFrame.emit(),
                          'fullscreen': lambda a,b: self.toggleFullScreen(),
 #                          'edit': lambda a,b: self.edit.emit(),
 #                          'help': lambda a,b: self.help.emit(),
