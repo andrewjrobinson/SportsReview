@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>481</width>
-    <height>444</height>
+    <width>586</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -125,7 +125,7 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="3">
+          <item row="0" column="4">
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -137,6 +137,19 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="playButton">
+            <property name="text">
+             <string>Play</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -186,7 +199,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>481</width>
+     <width>586</width>
      <height>27</height>
     </rect>
    </property>
@@ -208,6 +221,25 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="playbackToolBar">
+   <property name="windowTitle">
+    <string>Playback</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionStart"/>
+   <addaction name="actionPlay"/>
+   <addaction name="actionPlay0_5x"/>
+   <addaction name="actionPlay2x"/>
+   <addaction name="actionEnd"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrev"/>
+   <addaction name="actionNext"/>
+  </widget>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
@@ -221,6 +253,90 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/play.svg</normaloff>:/common/resources/play.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Play</string>
+   </property>
+   <property name="toolTip">
+    <string>Play (normal speed)</string>
+   </property>
+  </action>
+  <action name="actionPlay2x">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/play2x.svg</normaloff>:/common/resources/play2x.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Play2x</string>
+   </property>
+   <property name="toolTip">
+    <string>Play (double speed)</string>
+   </property>
+  </action>
+  <action name="actionPlay0_5x">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/play0.5x.svg</normaloff>:/common/resources/play0.5x.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Play0.5x</string>
+   </property>
+   <property name="toolTip">
+    <string>Play (half speed)</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/start.svg</normaloff>:/common/resources/start.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Move to first frame</string>
+   </property>
+  </action>
+  <action name="actionEnd">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/end.svg</normaloff>:/common/resources/end.svg</iconset>
+   </property>
+   <property name="text">
+    <string>End</string>
+   </property>
+   <property name="toolTip">
+    <string>Move to last frame</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/next.svg</normaloff>:/common/resources/next.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Next</string>
+   </property>
+   <property name="toolTip">
+    <string>Next frame</string>
+   </property>
+  </action>
+  <action name="actionPrev">
+   <property name="icon">
+    <iconset resource="../common/resources.qrc">
+     <normaloff>:/common/resources/prev.svg</normaloff>:/common/resources/prev.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Prev</string>
+   </property>
+   <property name="toolTip">
+    <string>Previous frame</string>
    </property>
   </action>
  </widget>

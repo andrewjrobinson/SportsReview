@@ -57,6 +57,15 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.frameSlider.valueChanged.connect(self.application.setFrame)
         self.incFrame.connect(self.application.nextFrame)
         self.decFrame.connect(self.application.prevFrame)
+        self.ui.playButton.clicked.connect(self._playNormal)
+        self.play.connect(self.application.play)
+        
+        # Playback toolbar
+        self.ui.actionPlay.triggered.connect(self._playNormal)
+        self.ui.actionPlay0_5x.triggered.connect(self._play0_5x)
+        self.ui.actionPlay2x.triggered.connect(self._play2x)
+        self.ui.actionNext.triggered.connect(self.application.nextFrame)
+        self.ui.actionPrev.triggered.connect(self.application.prevFrame)
         
         self._bindings = {}
         self._loadBindings(settings.getSetting('keybinding'))
@@ -66,6 +75,7 @@ class MainWindow(QtGui.QMainWindow):
     openFile = Signal(str)
     incFrame = Signal()
     decFrame = Signal()
+    play = Signal(float)
     
     ## Slots ##
     @Slot(str,object)
@@ -134,6 +144,18 @@ class MainWindow(QtGui.QMainWindow):
         '''Slot to know when the frame selection changes'''
         self.ui.frameLabel.setPixmap(fgroup[index][0])
         self.ui.frameSlider.setSliderPosition(index)
+    
+    @Slot()
+    def _playNormal(self):
+        self.play.emit(1.0)
+    
+    @Slot()
+    def _play2x(self):
+        self.play.emit(2.0)
+    
+    @Slot()
+    def _play0_5x(self):
+        self.play.emit(0.5)
     
     ## reimplemented ##
     def showEvent(self, *args, **kwargs):

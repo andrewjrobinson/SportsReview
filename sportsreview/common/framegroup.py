@@ -125,6 +125,25 @@ class FrameGroup(object):
             self._current = 0
         return self.current()
     
+    def peekNext(self):
+        '''
+        Similar to next() except doesn't move current position
+        '''
+        try:
+            return self._frames[self._current + 1]
+        except:
+            return None
+    
+    def peekPrev(self):
+        '''
+        Similar to prev() except doesn't move current position
+        '''
+        try:
+            return self._frames[self._current - 1]
+        except:
+            return None
+            
+    
     def setPosition(self, idx):
         '''
         Moves to the specified index.
@@ -209,6 +228,26 @@ class LazyFrameGroup(object):
         if self._current < 0:
             self._current = 0
         return self.current()
+    
+    def peekNext(self):
+        '''
+        Similar to next() except doesn't move current position
+        '''
+        self._loadframeinfo()
+        try:
+            return self._frames[self._current + 1]
+        except:
+            return None
+    
+    def peekPrev(self):
+        '''
+        Similar to prev() except doesn't move current position
+        '''
+        self._loadframeinfo()
+        try:
+            return self._frames[self._current - 1]
+        except:
+            return None
     
     def setPosition(self, idx):
         '''

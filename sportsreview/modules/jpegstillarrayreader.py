@@ -76,7 +76,7 @@ class JpegStillArrayReader(QtCore.QObject):
                 try:
                     fset = result[int(cols[0])]
                 except IndexError:
-                    result.append(LazyFrameSet(timestamp=cols[1], loadframefunc=lazysetloader))
+                    result.append(LazyFrameSet(timestamp=float(cols[1]), loadframefunc=lazysetloader))
                     fset = result[int(cols[0])]
                 
                 # add the frame file to it

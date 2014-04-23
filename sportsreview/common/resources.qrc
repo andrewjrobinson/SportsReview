@@ -1,5 +1,13 @@
 <RCC>
   <qresource prefix="common">
+    <file>resources/prev.svg</file>
+    <file>resources/next.svg</file>
+    <file>resources/play2x.svg</file>
+    <file>resources/play0.5x.svg</file>
+    <file>resources/start.svg</file>
+    <file>resources/play.svg</file>
+    <file>resources/end.svg</file>
+    <file>resources/splitbutton.svg</file>
     <file>resources/icon.png</file>
     <file>resources/icon.svg</file>
   </qresource>
