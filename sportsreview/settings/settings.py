@@ -47,6 +47,9 @@ settings = {
 		'F1': [
 			('core', 'help'),
 		],
+		'F10': [
+			('processgroup', 'AviWriterCV', 0),
+		],
 		'F11': [
 			('core', 'fullscreen'),
 		],
@@ -134,14 +137,14 @@ settings = {
 		},
 	],
 	'aftertouchesui': {
-		'geometry': (0, 39, 1280, 985),
-		'mode': 'maximised',
+		'geometry': (1, 39, 746, 715),
+		'mode': 'normal',
 		'savegeometry': True,
 		'savemode': True,
 	},
 	'delayanalysisui': {
-		'geometry': (0, 0, 1280, 1024),
-		'mode': 'fullscreen',
+		'geometry': (77, 54, 960, 768),
+		'mode': 'normal',
 		'savegeometry': True,
 		'savemode': True,
 	},

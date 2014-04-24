@@ -42,6 +42,9 @@ class AfterTouchesApplication(QtCore.QObject):
         
         self._openFrameGroup = None
         
+        self._processframerandom = {}
+        self._processgrouprandom = {}
+        
         # load settings file
         if len(argv) == 2:
             self.settings = sportsreview.settings.settingsmanager.SettingsManager(argv[1])
@@ -53,6 +56,8 @@ class AfterTouchesApplication(QtCore.QObject):
         
         # connect signals
         self.mainwindow.openFile.connect(self.openFile)
+        self.mainwindow.processFrame.connect(self.processFrame)
+        self.mainwindow.processGroup.connect(self.processGroup)
         
         # frame playback timer
         self._playing = 0 #speed, 1 = normal, 0.5 = half speed (in future: -ve for reverse)
@@ -147,6 +152,32 @@ class AfterTouchesApplication(QtCore.QObject):
                 pass #TODO: alter start time so it will calculate correctly
         else:
             self.mainwindow.setStatusMsg("No file open!", 1000)
+    
+    @Slot(str, object)
+    def processFrame(self, modulename, config):
+        ''''''
+        if self._openFrameGroup is not None:
+            # get module implementation
+            if modulename in self._processframerandom:
+                module = self._processframerandom[modulename]
+            else:
+                module = sportsreview.common.modulemanager.ModuleManager.getProcessFrameModule(modulename).getModule(self.settings, config)
+                self._processframerandom[modulename] = module
+            
+            module.process(self._openFrameGroup.current())
+        
+    @Slot(str, object)
+    def processGroup(self, modulename, config):
+        ''''''
+        if self._openFrameGroup is not None:
+            # get module implementation
+            if modulename in self._processgrouprandom:
+                module = self._processgrouprandom[modulename]
+            else:
+                module = sportsreview.common.modulemanager.ModuleManager.getProcessGroupModule(modulename).getModule(self.settings, config)
+                self._processgrouprandom[modulename] = module
+                
+            module.processGroup(self._openFrameGroup)
         
     ## Support ##
     def _playFrame(self):

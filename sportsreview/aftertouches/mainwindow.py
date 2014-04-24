@@ -81,6 +81,8 @@ class MainWindow(QtGui.QMainWindow):
     incFrame = Signal()
     decFrame = Signal()
     play = Signal(float)
+    processFrame = Signal(str, object)
+    processGroup = Signal(str, object)
     
     ## Slots ##
     @Slot(str,object)
@@ -120,7 +122,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.frameSlider.setMaximum(frameCount -1)
         
         # render previews
-        f0 = fgroup[0][0]
+        f0 = fgroup[0][0].asQPixmap()
         previewW = self.ui.previewLabel.width()
         previewH = self.ui.previewLabel.height()
         previewPmap = QtGui.QPixmap(previewW, previewH)
@@ -134,7 +136,7 @@ class MainWindow(QtGui.QMainWindow):
         for i in xrange(printCount):
             fid = int(round(float(i * (frameCount-1)) / (printCount-1)))
             x = int(round(i * (freeSpace + scaledW)))
-            frame = fgroup[fid][0].scaled(scaledW, previewH)
+            frame = fgroup[fid][0].asQPixmap().scaled(scaledW, previewH)
             painter.drawPixmap(x,0,frame)
             
         
@@ -142,12 +144,12 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.previewLabel.setPixmap(previewPmap)
         
         # render the current frame
-        self.ui.frameLabel.setPixmap(fgroup.current()[0])
+        self.ui.frameLabel.setPixmap(fgroup.current()[0].asQPixmap())
     
     @Slot(object, int)
     def selectedFrameSet(self, fgroup, index):
         '''Slot to know when the frame selection changes'''
-        self.ui.frameLabel.setPixmap(fgroup[index][0])
+        self.ui.frameLabel.setPixmap(fgroup[index][0].asQPixmap())
         self.ui.frameSlider.setSliderPosition(index)
     
     @Slot()
@@ -238,8 +240,8 @@ class MainWindow(QtGui.QMainWindow):
         try:
             
             groups = {'core': 'core',
-#                     'processframe': lambda m,c: self.processFrame.emit(m,c),
-#                     'processgroup': lambda m,c: self.processGroup.emit(m,c),
+                    'processframe': lambda m,c: self.processFrame.emit(m,c),
+                    'processgroup': lambda m,c: self.processGroup.emit(m,c),
                     }
             corefuncs = {
                          'quit': lambda a,b: self.close(),

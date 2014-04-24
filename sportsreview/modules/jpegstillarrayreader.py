@@ -63,17 +63,17 @@ class JpegStillArrayReader(QtCore.QObject):
         @return: FrameGroup like object
         '''
         def lazysetloader(sself, _, framefilename):
-#             print "Loading: %s" % framefilename
-            pmap = QtGui.QPixmap(framefilename)
+            pmap = QPIFrame(framefilename)
             return pmap
         def lazygrouploader(gself, timingfilename):
             f = open(timingfilename)
             result = []
+            gself.setHeader('filename', timingfilename)
             for line in f:
                 if line.startswith('#'):
                     line = line[1:]
                     name, value = line.split('=', 2)
-                    gself.headers[name] = value
+                    gself.setHeader(name, value)
                 else:
                     cols = line.strip().split('\t')
                     
@@ -93,5 +93,27 @@ class JpegStillArrayReader(QtCore.QObject):
 
   
 #end class JpegStillArrayReader
+     
+class QPIFrame(object):
+    '''Stores a frame in QPixmap or QImage format'''
+    
+    def __init__(self, filename):
+        self._filename = filename
+        self._qimage = None
+        self._qpixmap = None
+        
+    def asQPixmap(self):
+        '''Returns a qpixmap for this frame'''
+        if self._qpixmap is None:
+            self._qpixmap = QtGui.QPixmap(self._filename)
+        return self._qpixmap
+        
+    def asQImage(self):
+        '''Returns a qimage version of this frame'''
+        if self._qimage is None:
+            self._qimage = QtGui.QImage(self._filename)
+        return self._qimage
+
+# end class QPIFrame
     
     

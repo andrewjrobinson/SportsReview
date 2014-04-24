@@ -41,6 +41,7 @@ class FrameGroup(object):
         if timestamp is None:
             timestamp = time.time()
         self.timestamp = timestamp
+        self.filename = None
         self._current = 0
         self._currentset = False
         self.headers = {}
@@ -165,6 +166,8 @@ class FrameGroup(object):
         '''Set a header value.  System headers will be made into attributes'''
         if name == "timestamp":
             self.timestamp = float(value)
+        elif name == "filename":
+            self.filename = value
         self.headers[name] = value
     
     def __len__(self, *args, **kwargs):
@@ -197,6 +200,7 @@ class LazyFrameGroup(object):
         if timestamp is None:
             timestamp = time.time()
         self.timestamp = timestamp
+        self.filename = None
         self._loadframelistfunc = loadframelistfunc
         self._loadframelistopts = loadframelistopts
         self._current = 0
@@ -276,6 +280,8 @@ class LazyFrameGroup(object):
         '''Set a header value.  System headers will be made into attributes'''
         if name == "timestamp":
             self.timestamp = float(value)
+        elif name == "filename":
+            self.filename = value
         self.headers[name] = value
     
     def __len__(self, *args, **kwargs):

@@ -93,6 +93,7 @@ class DelayVideoApplication(QtCore.QObject):
             self._processframes.append(sportsreview.common.modulemanager.ModuleManager.getProcessFrameModule(cap[0]).getModule(self.settings, cap[1]))
         self.pausedbuffer = None            # place to store frames while paused
         
+        self._processframerandom = {}
         self._processgrouprandom = {}
         
         # frame capture timer
