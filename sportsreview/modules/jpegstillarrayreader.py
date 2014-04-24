@@ -17,7 +17,6 @@
 #  *  along with SportsReview.  If not, see <http://www.gnu.org/licenses/>.      *
 #  *                                                                             *
 #  *******************************************************************************/
-from sportsreview.common.frameset import LazyFrameSet
 '''
 Created on 22/04/2014
 @author: Andrew Robinson
@@ -29,6 +28,7 @@ previously recorded FrameGroup
 from sportsreview.support.qtlib import QtCore, QtGui
 
 from sportsreview.common.framegroup import LazyFrameGroup
+from sportsreview.common.frameset import LazyFrameSet
 
 class JpegStillArrayReader(QtCore.QObject):
     '''Reads a frame group from file in the form of 1 jpeg per frameset per image'''
@@ -70,17 +70,22 @@ class JpegStillArrayReader(QtCore.QObject):
             f = open(timingfilename)
             result = []
             for line in f:
-                cols = line.strip().split('\t')
-                
-                # get the frameset (or create new one)
-                try:
-                    fset = result[int(cols[0])]
-                except IndexError:
-                    result.append(LazyFrameSet(timestamp=float(cols[1]), loadframefunc=lazysetloader))
-                    fset = result[int(cols[0])]
-                
-                # add the frame file to it
-                fset.addFrame(cols[3]) #TODO: make frameset support stream id's (so we can handle missing frames)
+                if line.startswith('#'):
+                    line = line[1:]
+                    name, value = line.split('=', 2)
+                    gself.headers[name] = value
+                else:
+                    cols = line.strip().split('\t')
+                    
+                    # get the frameset (or create new one)
+                    try:
+                        fset = result[int(cols[0])]
+                    except IndexError:
+                        result.append(LazyFrameSet(timestamp=float(cols[1]), loadframefunc=lazysetloader))
+                        fset = result[int(cols[0])]
+                    
+                    # add the frame file to it
+                    fset.addFrame(cols[3]) #TODO: make frameset support stream id's (so we can handle missing frames)
             return result
         
         return LazyFrameGroup(None, lazygrouploader, options['filename'])

@@ -51,7 +51,7 @@ settings = {
 			('core', 'fullscreen'),
 		],
 		'F12': [
-			('processgroup', 'RecordStillCV'),
+			('processgroup', 'JpegStillArrayWriter'),
 		],
 		'F2': [
 			('core', 'edit'),
@@ -135,7 +135,7 @@ settings = {
 	],
 	'aftertouchesui': {
 		'geometry': (0, 39, 800, 600),
-		'mode': 'maximised',
+		'mode': 'normal',
 		'savegeometry': True,
 		'savemode': True,
 	},

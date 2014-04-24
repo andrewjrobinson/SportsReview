@@ -5,5 +5,5 @@ import usbcamcapturecv
 import framedelay
 import frameextend
 import framestore
-import recordstillcv
 import jpegstillarrayreader
+import jpegstillarraywriter

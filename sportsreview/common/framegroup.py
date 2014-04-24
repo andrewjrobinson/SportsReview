@@ -43,6 +43,7 @@ class FrameGroup(object):
         self.timestamp = timestamp
         self._current = 0
         self._currentset = False
+        self.headers = {}
         
         self._addcount = 0
         
@@ -138,9 +139,9 @@ class FrameGroup(object):
         '''
         Similar to prev() except doesn't move current position
         '''
-        try:
+        if self._current > 0:
             return self._frames[self._current - 1]
-        except:
+        else:
             return None
             
     
@@ -159,6 +160,12 @@ class FrameGroup(object):
         @return: int, the id of the current frame
         '''
         return self._current
+    
+    def setHeader(self, name, value):
+        '''Set a header value.  System headers will be made into attributes'''
+        if name == "timestamp":
+            self.timestamp = float(value)
+        self.headers[name] = value
     
     def __len__(self, *args, **kwargs):
         return len(self._frames)
@@ -194,6 +201,7 @@ class LazyFrameGroup(object):
         self._loadframelistopts = loadframelistopts
         self._current = 0
         self._currentset = False
+        self.headers = {}
         
     def current(self):
         '''
@@ -243,10 +251,9 @@ class LazyFrameGroup(object):
         '''
         Similar to prev() except doesn't move current position
         '''
-        self._loadframeinfo()
-        try:
+        if self._current > 0:
             return self._frames[self._current - 1]
-        except:
+        else:
             return None
     
     def setPosition(self, idx):
@@ -264,6 +271,12 @@ class LazyFrameGroup(object):
         @return: int, the id of the current frame
         '''
         return self._current
+    
+    def setHeader(self, name, value):
+        '''Set a header value.  System headers will be made into attributes'''
+        if name == "timestamp":
+            self.timestamp = float(value)
+        self.headers[name] = value
     
     def __len__(self, *args, **kwargs):
         self._loadframeinfo()

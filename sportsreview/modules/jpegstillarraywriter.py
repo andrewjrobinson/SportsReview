@@ -27,8 +27,8 @@ import time
 
 from sportsreview.support.qtlib import QtCore, Slot
 
-class RecordStillCV(QtCore.QObject):
-    '''Writes a frame group to file in the form of 1 jpg per frameset per image'''
+class JpegStillArrayWriter(QtCore.QObject):
+    '''Writes a frame group to file in the form of 1 jpg per frameset per frame'''
     
     __CAPTURE_FRAME__ = False
     __PROCESS_FRAME__ = False
@@ -57,7 +57,7 @@ class RecordStillCV(QtCore.QObject):
     
     def processGroup(self, framegroup):
         '''
-        Writes the frames within the frame to disk as jpg images along with a summary text file
+        Writes the frames within the frameset to disk as jpg images along with a summary text file
         
         @param framegroup: the incoming frame object
         '''
@@ -74,6 +74,15 @@ class RecordStillCV(QtCore.QObject):
             
             idx = 1
             timingFile = open("%s%stiming.txt" % (outdir, os.path.sep), 'w')
+            
+            # write headers
+            f0 = framegroup[0]
+            startTimestamp = f0.timestamp
+            timingFile.write("#timestamp=%s\n" % (startTimestamp,))
+            timingFile.write("#frames=%s\n" % (len(framegroup),))
+            timingFile.write("#streams=%s\n" % (len(f0),))
+            
+            # write frame files
             for frameset in framegroup:
                 i = 0
                 for frame in frameset:
@@ -92,4 +101,4 @@ class RecordStillCV(QtCore.QObject):
         if name == "recorddirectory":
             self._recorddirectory = value
         
-# end class RecordStillCV
+# end class JpegStillArrayWriter

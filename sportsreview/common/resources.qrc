@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="common">
+    <file>resources/playrev0.5x.svg</file>
+    <file>resources/playrev2x.svg</file>
+    <file>resources/playrev.svg</file>
     <file>resources/prev.svg</file>
     <file>resources/next.svg</file>
     <file>resources/play2x.svg</file>

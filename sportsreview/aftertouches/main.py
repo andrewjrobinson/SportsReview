@@ -82,7 +82,7 @@ class AfterTouchesApplication(QtCore.QObject):
         fgroup = reader.load({"filename": filename})
         self._openFrameGroup = fgroup
         self.openFrameGroup.emit(fgroup)
-        self.mainwindow.setStatusMsg("Opened: %s" % (filename, ))
+        self.mainwindow.setStatusMsg("Opened: %s" % (filename, ), 5000)
         
     @Slot()
     def nextFrame(self):
@@ -90,6 +90,8 @@ class AfterTouchesApplication(QtCore.QObject):
         if self._openFrameGroup is not None:
             self._openFrameGroup.next()
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
     
     @Slot()
     def prevFrame(self):
@@ -97,6 +99,8 @@ class AfterTouchesApplication(QtCore.QObject):
         if self._openFrameGroup is not None:
             self._openFrameGroup.prev()
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
     
     @Slot(int)
     def setFrame(self, idx):
@@ -104,17 +108,45 @@ class AfterTouchesApplication(QtCore.QObject):
         if self._openFrameGroup is not None:
             self._openFrameGroup.setPosition(idx)
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
             
+    @Slot()
+    def jumpStart(self):
+        '''Move the start of current framegroup'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.setPosition(0)
+            self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
+        
+    @Slot()
+    def jumpEnd(self):
+        '''Move to the end of current framegroup'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.setPosition(len(self._openFrameGroup) - 1)
+            self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
+        
     @Slot(float)
     def play(self, speed):
         '''Play current file at selected speed.  Can call it multiple times to change speed.'''
-        if not self._playingTimer.isActive():
-            self._playing = speed
-            now = time.time()
-            self._playStartOffset = now - self._openFrameGroup.current().timestamp
-            self._playingTimer.start(16) #Todo: make this a setting (16 = 62.5 fps (max))
+        if self._openFrameGroup is not None:
+            if speed == 0:
+                self.mainwindow.setStatusMsg("Paused", 1000)
+            elif speed > 0:
+                self.mainwindow.setStatusMsg("Play (%sx)" % speed, 1000)
+            else:
+                self.mainwindow.setStatusMsg("Play reverse (%sx)" % (-speed), 1000)
+            if not self._playingTimer.isActive():
+                self._playing = speed
+                self._playStartTime = time.time()
+                self._playingTimer.start(16) #Todo: make this a setting (16 = 62.5 fps (max))
+            else:
+                pass #TODO: alter start time so it will calculate correctly
         else:
-            pass #TODO: alter start time so it will calculate correctly
+            self.mainwindow.setStatusMsg("No file open!", 1000)
         
     ## Support ##
     def _playFrame(self):
@@ -125,15 +157,23 @@ class AfterTouchesApplication(QtCore.QObject):
             self._playingTimer.stop()
             return
         
-        # find the last release-able frame
-        now = time.time()
-        nextFrame = self._openFrameGroup.peekNext()
+        # find the last release-able frameset
+        playbackTime = (time.time() - self._playStartTime) * self._playing
         lastFrame = None
-        while nextFrame is not None and \
-                (nextFrame.timestamp + self._playStartOffset) < now:
-            lastFrame = self._openFrameGroup.next()
+        nextFrame = None
+        if self._playing > 0:   # playing forward
+            releaseTimestamp = float(self._openFrameGroup[0].timestamp) + playbackTime
             nextFrame = self._openFrameGroup.peekNext()
-        
+            while nextFrame is not None and nextFrame.timestamp < releaseTimestamp:
+                lastFrame = self._openFrameGroup.next()
+                nextFrame = self._openFrameGroup.peekNext()
+        else:                   # playing reverse
+            releaseTimestamp = float(self._openFrameGroup[-1].timestamp) + playbackTime
+            nextFrame = self._openFrameGroup.peekPrev()
+            while nextFrame is not None and nextFrame.timestamp > releaseTimestamp:
+                lastFrame = self._openFrameGroup.prev()
+                nextFrame = self._openFrameGroup.peekPrev()
+                
         # display the last released frame (if required)
         if lastFrame is not None:
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())

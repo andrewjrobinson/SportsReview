@@ -50,22 +50,27 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.actionExit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.showAbout)
         self.ui.actionOpen.triggered.connect(self.openFileDialog)
-        self.ui.nextFrameButton.clicked.connect(self.application.nextFrame)
-        self.ui.prevFrameButton.clicked.connect(self.application.prevFrame)
+#         self.ui.nextFrameButton.clicked.connect(self.application.nextFrame)
+#         self.ui.prevFrameButton.clicked.connect(self.application.prevFrame)
         self.application.openFrameGroup.connect(self.openFrameGroup)
         self.application.selectedFrameSet.connect(self.selectedFrameSet)
         self.ui.frameSlider.valueChanged.connect(self.application.setFrame)
         self.incFrame.connect(self.application.nextFrame)
         self.decFrame.connect(self.application.prevFrame)
-        self.ui.playButton.clicked.connect(self._playNormal)
+#         self.ui.playButton.clicked.connect(self._playNormal)
         self.play.connect(self.application.play)
         
         # Playback toolbar
         self.ui.actionPlay.triggered.connect(self._playNormal)
         self.ui.actionPlay0_5x.triggered.connect(self._play0_5x)
         self.ui.actionPlay2x.triggered.connect(self._play2x)
+        self.ui.actionPlayRev.triggered.connect(self._playRevNormal)
+        self.ui.actionPlayRev0_5x.triggered.connect(self._playRev0_5x)
+        self.ui.actionPlayRev2x.triggered.connect(self._playRev2x)
         self.ui.actionNext.triggered.connect(self.application.nextFrame)
         self.ui.actionPrev.triggered.connect(self.application.prevFrame)
+        self.ui.actionStart.triggered.connect(self.application.jumpStart)
+        self.ui.actionEnd.triggered.connect(self.application.jumpEnd)
         
         self._bindings = {}
         self._loadBindings(settings.getSetting('keybinding'))
@@ -156,6 +161,18 @@ class MainWindow(QtGui.QMainWindow):
     @Slot()
     def _play0_5x(self):
         self.play.emit(0.5)
+    
+    @Slot()
+    def _playRevNormal(self):
+        self.play.emit(-1.0)
+    
+    @Slot()
+    def _playRev2x(self):
+        self.play.emit(-2.0)
+    
+    @Slot()
+    def _playRev0_5x(self):
+        self.play.emit(-0.5)
     
     ## reimplemented ##
     def showEvent(self, *args, **kwargs):
