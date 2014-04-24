@@ -28,7 +28,7 @@ Settings:
 
 '''
 settings = {
-	'delay': 1.0,
+	'delay': 1.5,
 	'keepalive': 2.0,
 	'extend': 1.0,
 	'recorddirectory': '/tmp',
@@ -134,10 +134,16 @@ settings = {
 		},
 	],
 	'aftertouchesui': {
-		'geometry': (0, 39, 800, 600),
-		'mode': 'normal',
+		'geometry': (0, 39, 1280, 985),
+		'mode': 'maximised',
+		'savegeometry': True,
+		'savemode': True,
+	},
+	'delayanalysisui': {
+		'geometry': (0, 0, 1280, 1024),
+		'mode': 'fullscreen',
 		'savegeometry': True,
 		'savemode': True,
 	},
 }
-__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding', 'selectedlayout', 'layouts', 'aftertouchesui']
+__order__= ['delay', 'keepalive', 'extend', 'recorddirectory', 'keybinding', 'selectedlayout', 'layouts', 'aftertouchesui', 'delayanalysisui']

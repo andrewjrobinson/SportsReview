@@ -32,10 +32,12 @@ from sportsreview.support.qtlib import QtCore, QtGui, Slot
 class OverlayWidget(QtGui.QWidget):
     '''Draws messages over the video stream'''
     
-    def __init__(self, parent = None, *args, **kwargs):
+    def __init__(self, parent=None, settings=None, *args, **kwargs):
         QtGui.QWidget.__init__(self, parent, *args, **kwargs)
+        self._settings = settings
+        
         self._messages = {}
-        self.updateWidgetPosition()
+        self._messageorder = []
         self.setFont(QtGui.QFont("Liberation Sans", 72)) #TODO: put font face in config file
         if parent is not None:
             #TODO: make sure it has a resized signal
@@ -44,6 +46,9 @@ class OverlayWidget(QtGui.QWidget):
         self._clearTimer = QtCore.QTimer(self)
         self._clearTimer.timeout.connect(self.clearTimeout);
         self._clearTimer.start(100);
+        
+        self.updateWidgetPosition()
+    # end __init__()
     
     def paintEvent(self, e):
         qp = QtGui.QPainter()
@@ -64,28 +69,42 @@ class OverlayWidget(QtGui.QWidget):
             
             # outlined text
             #TODO: make the text colours into settings
-            msg = self._messages[None][1]
-            path = QtGui.QPainterPath()
-            path.addText(QtCore.QPoint(1,self._baseline), self.font(), msg)
-            qp.setPen(QtGui.QPen(QtCore.Qt.white, 1.5, QtCore.Qt.SolidLine))
-            qp.setBrush(QtCore.Qt.black)
-            qp.drawPath(path)
+            i = 0
+            for group in self._messageorder:
+                msg = self._messages[group][1]
+                msgpos = self._msgposs[i]
+                path = QtGui.QPainterPath()
+                path.addText(QtCore.QPoint(*msgpos), self.font(), msg)
+                qp.setPen(QtGui.QPen(QtCore.Qt.white, 1.5, QtCore.Qt.SolidLine))
+                qp.setBrush(QtCore.Qt.black)
+                qp.drawPath(path)
+                i += 1
         
     def updateWidgetPosition(self):
         '''Resizes widget to content size and repositions within parent'''
         
-        if None in self._messages:  #TODO: make this handle other groups
+        if len(self._messages) > 0:
             self.show()
             pw = self.parent().childrenRect().width()
             ph = self.parent().childrenRect().height()
             
-            # check size of content
-            msg = self._messages[None][1]
+            # check size of each message
+            w = 0
+            h = 0
             fm = QtGui.QFontMetrics(self.font())
-            w = fm.width(msg)+2
-            h = fm.height()+2
-            self._baseline = fm.ascent()
-            #TODO: make this scale the font size 
+            msgposs = []
+            for group in self._messageorder:
+                msg = self._messages[group][1]
+                mw = fm.width(msg)+2
+                msgposs.append((mw,h + fm.ascent()))
+                w = max(w,mw)
+                h += fm.height()+2
+                #TODO: make this scale the font size
+            
+            # calculate the left positions
+            self._msgposs = []
+            for msgpos in msgposs:
+                self._msgposs.append(((w-msgpos[0])/2 ,msgpos[1]))
             
             # resize/position widget
             self.setGeometry((pw-w)/2,(ph-h)/2,w,h)
@@ -108,6 +127,13 @@ class OverlayWidget(QtGui.QWidget):
         #TODO: make timeout default to a setting value
         
         self._messages[group] = (time.time() + timeout, message)
+        
+        # save the ordering of messages
+        if group in self._messageorder:
+            self._messageorder.remove(group)
+        self._messageorder.append(group)
+        
+        # update position
         self.updateWidgetPosition()
         
     @Slot()
@@ -119,6 +145,8 @@ class OverlayWidget(QtGui.QWidget):
         for k in keys:
             if self._messages[k][0] < now:
                 self._messages.pop(k)
+                if k in self._messageorder:
+                    self._messageorder.remove(k)
                 cleared = True
         if cleared:
             self.updateWidgetPosition()

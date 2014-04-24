@@ -59,6 +59,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.delay.setText(str(settings.getSetting("delay")))
         self._loadScreens(self.settings.getSetting("layouts")[self.settings.getSetting("selectedlayout")]["screen"])
         self._bindings = {}
+        self._windowstate = None
         self._loadBindings(settings.getSetting('keybinding'))
         
     # end __init__()
@@ -92,6 +93,34 @@ class MainWindow(QtGui.QMainWindow):
         elif name == "selectedlayout":
             self._loadScreens(self.settings.getSetting("layouts")[value]["screen"])
     
+    ## reimplemented ##
+    def showEvent(self, *args, **kwargs):
+        if self._windowstate is None:
+            self._windowstate = self.settings.getSetting("delayanalysisui")
+            self.setGeometry(*self._windowstate['geometry'])
+            if self._windowstate['mode'] == 'fullscreen':
+                self.showFullScreen()
+            elif self._windowstate['mode'] == 'maximised':
+                self.showMaximized()
+        return QtGui.QMainWindow.showEvent(self, *args, **kwargs)
+    
+    def closeEvent(self, *args, **kwargs):
+        if self._windowstate is not None:
+            self._windowstate = self.settings.getSetting("delayanalysisui")
+            if self._windowstate['savemode'] == True:
+                if self.windowState() == QtCore.Qt.WindowFullScreen:
+                    self._windowstate['mode'] = "fullscreen"
+                elif self.windowState() == QtCore.Qt.WindowMaximized:
+                    self._windowstate['mode'] = "maximised"
+                else:
+                    self._windowstate['mode'] = "normal"
+            if self._windowstate['savegeometry'] == True:
+                self._windowstate['geometry'] = self.geometry().getRect()
+            self.settings.setSetting('delayanalysisui', self._windowstate)
+        
+        return QtGui.QMainWindow.closeEvent(self, *args, **kwargs)
+    
+    ## support ##
     def _loadScreens(self, screens):
         self._screens = screens
         self._layouts = min(4, len(self._screens))
