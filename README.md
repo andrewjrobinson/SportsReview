@@ -13,14 +13,23 @@ Useful for:
 * Soccer
 * etc.
 
+## Delay Analysis tool
+
 A tool that allows you to:
 * delay a live video stream by a number of seconds.  This allows you perform a training task such hitting a ball then immediately afterwards review what it looked like.
-* pause the live stream and step through frame by frame
+* pause the live stream and step through frame-by-frame
 * record a small frames groups for later analysis
+
+## After Touches tool
+
+A tool that allows you to: 
+* Load a recording
+* View in slowmotion
+* View frame-by-frame
+* Export to AVI
 
 ## Future work/ideas:
 * Analysis Tool: allows user to process saved frame groups to produce:
- * Export as AVI/Mpeg
  * Generate graphs (from measurement capture devices)
  * Annotate video frames with: freehand lines (that can be adjusted frame by frame)
 * Open source hardware (arduino):

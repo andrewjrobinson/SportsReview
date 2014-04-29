@@ -1,3 +1,3 @@
 
-__version__ = '0.1'
-__version_info__ = (0,1,0,'final')
+__version__ = '0.2'
+__version_info__ = (0,2,0,'final')
