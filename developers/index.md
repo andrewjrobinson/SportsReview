@@ -109,12 +109,14 @@ Branches:
 * env.py: global overrides for settings and disabling software updates
 
 ## Version numbering
-Sports review uses the ''Semantic Versioning'' standard for version numbers (http://semver.org/)[http://semver.org/]
+Sports review uses the ''Semantic Versioning'' standard for version numbers [http://semver.org/](http://semver.org/)
 i.e. [Major].[Minor].[Patch] using all digits
 
 ### Bumping version
-When the version number is bumped check to make sure it is updated in the following places
+When the version number is bumped check to make sure it is updated in the following places:
 
+* \[code\]: setup.py
+* \[code\]: README.md, future work
 * \[code\]: sportsreview/\_\_init\_\_.py
 * \[docs\]: index.md, in heading, urls, and json metadata
 * \[docs\]: downloads/index.md, in heading and urls
