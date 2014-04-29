@@ -72,6 +72,10 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.actionStart.triggered.connect(self.application.jumpStart)
         self.ui.actionEnd.triggered.connect(self.application.jumpEnd)
         
+        # Clipping toolbar
+        self.ui.actionClipStart.triggered.connect(self.application.clipStart)
+        self.ui.actionClipEnd.triggered.connect(self.application.clipEnd)
+        
         self._bindings = {}
         self._loadBindings(settings.getSetting('keybinding'))
     #end init()

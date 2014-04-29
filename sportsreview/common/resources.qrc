@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="common">
+    <file>resources/clipend.svg</file>
+    <file>resources/clipstart.svg</file>
     <file>resources/playrev0.5x.svg</file>
     <file>resources/playrev2x.svg</file>
     <file>resources/playrev.svg</file>

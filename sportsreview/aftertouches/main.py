@@ -120,7 +120,7 @@ class AfterTouchesApplication(QtCore.QObject):
     def jumpStart(self):
         '''Move the start of current framegroup'''
         if self._openFrameGroup is not None:
-            self._openFrameGroup.setPosition(0)
+            self._openFrameGroup.setPosition(self._openFrameGroup.getClipStart())
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
         else:
             self.mainwindow.setStatusMsg("No file open!", 1000)
@@ -129,7 +129,7 @@ class AfterTouchesApplication(QtCore.QObject):
     def jumpEnd(self):
         '''Move to the end of current framegroup'''
         if self._openFrameGroup is not None:
-            self._openFrameGroup.setPosition(len(self._openFrameGroup) - 1)
+            self._openFrameGroup.setPosition(self._openFrameGroup.getClipEnd() - 1)
             self.selectedFrameSet.emit(self._openFrameGroup, self._openFrameGroup.index())
         else:
             self.mainwindow.setStatusMsg("No file open!", 1000)
@@ -179,6 +179,22 @@ class AfterTouchesApplication(QtCore.QObject):
                 
             module.processGroup(self._openFrameGroup)
         
+    @Slot()
+    def clipStart(self):
+        '''Mark current frame as start'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.clipStart()
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
+        
+    @Slot()
+    def clipEnd(self):
+        '''Mark current frame as end'''
+        if self._openFrameGroup is not None:
+            self._openFrameGroup.clipEnd()
+        else:
+            self.mainwindow.setStatusMsg("No file open!", 1000)
+    
     ## Support ##
     def _playFrame(self):
         '''Plays the next frame if required [timer target]'''
@@ -195,15 +211,23 @@ class AfterTouchesApplication(QtCore.QObject):
         if self._playing > 0:   # playing forward
             releaseTimestamp = float(self._openFrameGroup[0].timestamp) + playbackTime
             nextFrame = self._openFrameGroup.peekNext()
+            if self._openFrameGroup.index() >= self._openFrameGroup.getClipEnd():
+                nextFrame = None
             while nextFrame is not None and nextFrame.timestamp < releaseTimestamp:
                 lastFrame = self._openFrameGroup.next()
                 nextFrame = self._openFrameGroup.peekNext()
+                if self._openFrameGroup.index() >= self._openFrameGroup.getClipEnd():
+                    nextFrame = None
         else:                   # playing reverse
             releaseTimestamp = float(self._openFrameGroup[-1].timestamp) + playbackTime
             nextFrame = self._openFrameGroup.peekPrev()
+            if self._openFrameGroup.index() < self._openFrameGroup.getClipStart():
+                nextFrame = None
             while nextFrame is not None and nextFrame.timestamp > releaseTimestamp:
                 lastFrame = self._openFrameGroup.prev()
                 nextFrame = self._openFrameGroup.peekPrev()
+                if self._openFrameGroup.index() < self._openFrameGroup.getClipStart():
+                    nextFrame = None
                 
         # display the last released frame (if required)
         if lastFrame is not None:

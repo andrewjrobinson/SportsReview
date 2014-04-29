@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'aftertouches/aftertouches.ui'
 #
-# Created: Thu Apr 24 12:58:51 2014
+# Created: Tue Apr 29 20:06:13 2014
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -66,7 +66,6 @@ class Ui_MainWindow(object):
         self.playbackToolBar = QtGui.QToolBar(MainWindow)
         self.playbackToolBar.setObjectName("playbackToolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.playbackToolBar)
-        MainWindow.insertToolBarBreak(self.playbackToolBar)
         self.timelineDockWidget = QtGui.QDockWidget(MainWindow)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -104,6 +103,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.previewLabel)
         self.timelineDockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(8), self.timelineDockWidget)
+        self.clippingToolBar = QtGui.QToolBar(MainWindow)
+        self.clippingToolBar.setObjectName("clippingToolBar")
+        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.clippingToolBar)
         self.actionOpen = QtGui.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
         self.actionExit = QtGui.QAction(MainWindow)
@@ -160,6 +162,16 @@ class Ui_MainWindow(object):
         icon10.addPixmap(QtGui.QPixmap(":/common/resources/playrev0.5x.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionPlayRev0_5x.setIcon(icon10)
         self.actionPlayRev0_5x.setObjectName("actionPlayRev0_5x")
+        self.actionClipStart = QtGui.QAction(MainWindow)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(":/common/resources/clipstart.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClipStart.setIcon(icon11)
+        self.actionClipStart.setObjectName("actionClipStart")
+        self.actionClipEnd = QtGui.QAction(MainWindow)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap(":/common/resources/clipend.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClipEnd.setIcon(icon12)
+        self.actionClipEnd.setObjectName("actionClipEnd")
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExit)
@@ -180,6 +192,8 @@ class Ui_MainWindow(object):
         self.playbackToolBar.addSeparator()
         self.playbackToolBar.addAction(self.actionPrev)
         self.playbackToolBar.addAction(self.actionNext)
+        self.clippingToolBar.addAction(self.actionClipStart)
+        self.clippingToolBar.addAction(self.actionClipEnd)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -192,6 +206,7 @@ class Ui_MainWindow(object):
         self.timelineDockWidget.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Timeline", None, QtGui.QApplication.UnicodeUTF8))
         self.frameSlider.setToolTip(QtGui.QApplication.translate("MainWindow", "Select Frame", None, QtGui.QApplication.UnicodeUTF8))
         self.previewLabel.setText(QtGui.QApplication.translate("MainWindow", "No file open", None, QtGui.QApplication.UnicodeUTF8))
+        self.clippingToolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Clipping", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
@@ -217,5 +232,9 @@ class Ui_MainWindow(object):
         self.actionPlayRev2x.setToolTip(QtGui.QApplication.translate("MainWindow", "Play reverse (double speed)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPlayRev0_5x.setText(QtGui.QApplication.translate("MainWindow", "PlayRev0.5x", None, QtGui.QApplication.UnicodeUTF8))
         self.actionPlayRev0_5x.setToolTip(QtGui.QApplication.translate("MainWindow", "Play reverse (half speed)", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClipStart.setText(QtGui.QApplication.translate("MainWindow", "ClipStart", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClipStart.setToolTip(QtGui.QApplication.translate("MainWindow", "Set current frame as start of clip", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClipEnd.setText(QtGui.QApplication.translate("MainWindow", "ClipEnd", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionClipEnd.setToolTip(QtGui.QApplication.translate("MainWindow", "Set current frame as end of clip", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc

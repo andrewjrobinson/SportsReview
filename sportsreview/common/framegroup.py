@@ -207,6 +207,9 @@ class LazyFrameGroup(object):
         self._currentset = False
         self.headers = {}
         
+        self._start = 0
+        self._end = None
+        
     def current(self):
         '''
         Retrieves the current frame
@@ -283,6 +286,38 @@ class LazyFrameGroup(object):
         elif name == "filename":
             self.filename = value
         self.headers[name] = value
+        
+    def clipStart(self, idx = None):
+        '''
+        Sets the specified frame index as the start.  If idx is None then uses current index.
+        
+        @param idx: int, the index that will be the first frame (inclusive)
+        '''
+        if idx == None:
+            self._start = self._current
+        elif idx > 0 and idx < len(self._frames) and (self._end is None or idx < self._end):
+            self._start = idx
+        
+    def clipEnd(self, idx = None):
+        '''
+        Sets the specified frame index as the end.  If idx is None then uses current index.
+        
+        @param idx: int, the index that will be the last frame (exclusive)
+        '''
+        if idx == None:
+            self._end = self._current
+        elif idx > 0 and idx <= len(self._frames) and idx > self._start:
+            self._end = idx
+        
+    def getClipStart(self):
+        '''Returns the current clipping start point (index)'''
+        return self._start
+        
+    def getClipEnd(self):
+        '''Returns the current clipping end point (index)'''
+        if self._end is None:
+            return len(self._frames)
+        return self._end
     
     def __len__(self, *args, **kwargs):
         self._loadframeinfo()

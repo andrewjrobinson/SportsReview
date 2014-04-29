@@ -137,7 +137,7 @@ settings = {
 		},
 	],
 	'aftertouchesui': {
-		'geometry': (1, 39, 746, 715),
+		'geometry': (1, 39, 1280, 957),
 		'mode': 'normal',
 		'savegeometry': True,
 		'savemode': True,
