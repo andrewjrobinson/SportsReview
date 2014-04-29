@@ -305,7 +305,7 @@ class LazyFrameGroup(object):
         @param idx: int, the index that will be the last frame (exclusive)
         '''
         if idx == None:
-            self._end = self._current
+            self._end = self._current + 1
         elif idx > 0 and idx <= len(self._frames) and idx > self._start:
             self._end = idx
         

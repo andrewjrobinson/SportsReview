@@ -137,13 +137,13 @@ settings = {
 		},
 	],
 	'aftertouchesui': {
-		'geometry': (1, 39, 1280, 957),
-		'mode': 'normal',
+		'geometry': (0, 39, 800, 700),
+		'mode': 'maximised',
 		'savegeometry': True,
 		'savemode': True,
 	},
 	'delayanalysisui': {
-		'geometry': (77, 54, 960, 768),
+		'geometry': (0, 39, 800, 700),
 		'mode': 'normal',
 		'savegeometry': True,
 		'savemode': True,

@@ -140,13 +140,19 @@ class AfterTouchesApplication(QtCore.QObject):
         if self._openFrameGroup is not None:
             if speed == 0:
                 self.mainwindow.setStatusMsg("Paused", 1000)
-            elif speed > 0:
+            elif speed > 0: # forward
+                if self._openFrameGroup.index() >= (self._openFrameGroup.getClipEnd() - 1):
+                    self.jumpStart()
                 self.mainwindow.setStatusMsg("Play (%sx)" % speed, 1000)
-            else:
+                startTime = time.time() + (self._openFrameGroup[self._openFrameGroup.getClipStart()].timestamp - self._openFrameGroup.current().timestamp) / speed
+            else:           # reverse
+                if self._openFrameGroup.index() <= self._openFrameGroup.getClipStart():
+                    self.jumpEnd()
                 self.mainwindow.setStatusMsg("Play reverse (%sx)" % (-speed), 1000)
+                startTime = time.time() - (self._openFrameGroup.current().timestamp - self._openFrameGroup[self._openFrameGroup.getClipEnd()-1].timestamp) / speed
             if not self._playingTimer.isActive():
                 self._playing = speed
-                self._playStartTime = time.time()
+                self._playStartTime = startTime
                 self._playingTimer.start(16) #Todo: make this a setting (16 = 62.5 fps (max))
             else:
                 pass #TODO: alter start time so it will calculate correctly
@@ -209,19 +215,19 @@ class AfterTouchesApplication(QtCore.QObject):
         lastFrame = None
         nextFrame = None
         if self._playing > 0:   # playing forward
-            releaseTimestamp = float(self._openFrameGroup[0].timestamp) + playbackTime
+            releaseTimestamp = float(self._openFrameGroup[self._openFrameGroup.getClipStart()].timestamp) + playbackTime
             nextFrame = self._openFrameGroup.peekNext()
             if self._openFrameGroup.index() >= self._openFrameGroup.getClipEnd():
                 nextFrame = None
             while nextFrame is not None and nextFrame.timestamp < releaseTimestamp:
                 lastFrame = self._openFrameGroup.next()
                 nextFrame = self._openFrameGroup.peekNext()
-                if self._openFrameGroup.index() >= self._openFrameGroup.getClipEnd():
+                if self._openFrameGroup.index() >= (self._openFrameGroup.getClipEnd() - 1):
                     nextFrame = None
         else:                   # playing reverse
-            releaseTimestamp = float(self._openFrameGroup[-1].timestamp) + playbackTime
+            releaseTimestamp = float(self._openFrameGroup[self._openFrameGroup.getClipEnd()-1].timestamp) + playbackTime
             nextFrame = self._openFrameGroup.peekPrev()
-            if self._openFrameGroup.index() < self._openFrameGroup.getClipStart():
+            if self._openFrameGroup.index() <= self._openFrameGroup.getClipStart():
                 nextFrame = None
             while nextFrame is not None and nextFrame.timestamp > releaseTimestamp:
                 lastFrame = self._openFrameGroup.prev()
